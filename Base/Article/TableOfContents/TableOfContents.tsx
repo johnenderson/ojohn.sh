@@ -1,0 +1,99 @@
+'use client';
+
+import { useEffect, useLayoutEffect, useState } from 'react';
+
+const NAVBAR_OFFSET = 96;
+const ITEM_HEIGHT = 30; // h-6 (24px) + gap-1.5 (6px)
+
+type Heading = {
+  id: string;
+  text: string;
+  level: number;
+};
+
+export const TableOfContents = () => {
+  const [headings, setHeadings] = useState<Heading[]>([]);
+  const [activeId, setActiveId] = useState<string>('');
+
+  useLayoutEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll('article h2, article h3'),
+    );
+    const parsed = elements
+      .filter((el) => el.id)
+      .map((el) => ({
+        id: el.id,
+        text: el.textContent ?? '',
+        level: Number(el.tagName.charAt(1)),
+      }));
+    // Legitimate DOM read after mount — setState is unavoidable here
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHeadings(parsed);
+    if (parsed.length > 0) setActiveId(parsed[0].id);
+  }, []);
+
+  useEffect(() => {
+    if (headings.length === 0) return;
+
+    const headingEls = Array.from(
+      document.querySelectorAll('article h2, article h3'),
+    ) as HTMLElement[];
+
+    const onScroll = () => {
+      const top = headingEls.find(
+        (el) => el.getBoundingClientRect().top >= NAVBAR_OFFSET,
+      );
+      if (top) setActiveId(top.id);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [headings]);
+
+  if (headings.length === 0) return null;
+
+  const activeIdx = headings.findIndex((h) => h.id === activeId);
+
+  return (
+    <aside className="sticky hidden h-fit w-full max-w-[19rem] shrink-0 flex-col gap-3 border-l border-[#8b5cf6]/20 lg:flex light:border-[#8b5cf6]/25 text-lg"
+      style={{ top: '8rem' }}
+    >
+      <p className="ml-6 font-semibold text-white light:text-[#333]">
+        Nesse artigo
+      </p>
+      <div className="relative flex flex-col gap-1.5">
+        {headings.map((heading) => (
+          <a
+            key={heading.id}
+            href={`#${heading.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById(heading.id);
+              if (el) {
+                const top =
+                  el.getBoundingClientRect().top + window.scrollY - NAVBAR_OFFSET - 24;
+                window.scrollTo({ top, behavior: 'smooth' });
+              }
+              setActiveId(heading.id);
+            }}
+            className={`flex h-7 items-center truncate transition-colors duration-200 no-underline ${
+              heading.level === 3 ? 'pl-10' : 'pl-6'
+            } ${
+              activeId === heading.id
+                ? 'text-[#a78bfa] light:text-[#7c3aed]'
+                : 'text-[#444] hover:text-[#a78bfa] light:text-[#aaa] light:hover:text-[#7c3aed]'
+            }`}
+          >
+            {heading.text}
+          </a>
+        ))}
+
+        {/* Moving active indicator bar — same as doce.sh */}
+        <span
+          className="absolute -left-px w-px h-6 bg-[#8b5cf6] transition-all duration-300 ease-elastic"
+          style={{ top: `${(activeIdx >= 0 ? activeIdx : 0) * ITEM_HEIGHT}px` }}
+        />
+      </div>
+    </aside>
+  );
+};
