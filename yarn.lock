@@ -779,43 +779,6 @@
   resolved "https://registry.npmjs.org/@nolyfill/is-core-module/-/is-core-module-1.0.39.tgz"
   integrity sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==
 
-"@radix-ui/react-compose-refs@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.2.tgz"
-  integrity sha512-z4eqJvfiNnFMHIIvXP3CY57y2WJs5g2v3X0zm9mEJkrkNv4rDxu+sg9Jh8EkXyeqBkB7SOcboo9dMVqhyrACIg==
-
-"@radix-ui/react-portal@^1.0.1":
-  version "1.1.10"
-  resolved "https://registry.npmjs.org/@radix-ui/react-portal/-/react-portal-1.1.10.tgz"
-  integrity sha512-4kY9IVa6+9nJPsYmngK5Uk2kUmZnv7ChhHAFeQ5oaj8jrR1bIi3xww8nH71pz1/Ve4d/cXO3YxT8eikt1B0a8w==
-  dependencies:
-    "@radix-ui/react-primitive" "2.1.4"
-    "@radix-ui/react-use-layout-effect" "1.1.1"
-
-"@radix-ui/react-primitive@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.npmjs.org/@radix-ui/react-primitive/-/react-primitive-2.1.4.tgz"
-  integrity sha512-9hQc4+GNVtJAIEPEqlYqW5RiYdrr8ea5XQ0ZOnD6fgru+83kqT15mq2OCcbe8KnjRZl5vF3ks69AKz3kh1jrhg==
-  dependencies:
-    "@radix-ui/react-slot" "1.2.4"
-
-"@radix-ui/react-slot@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.2.4.tgz"
-  integrity sha512-Jl+bCv8HxKnlTLVrcDE8zTMJ09R9/ukw4qBs/oZClOfoQk/cOTbDn+NceXfV7j09YPVQUryJPHurafcSg6EVKA==
-  dependencies:
-    "@radix-ui/react-compose-refs" "1.1.2"
-
-"@radix-ui/react-use-layout-effect@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.1.tgz"
-  integrity sha512-RbJRS4UWQFkzHTTwVymMTUv8EqYhOp8dOOviLj2ugtTiXRaRQS7GLGxZTLL1jWhMeoSCf5zmcZkqTl9IiYfXcQ==
-
-"@reach/observe-rect@^1.1.0":
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/@reach/observe-rect/-/observe-rect-1.2.0.tgz"
-  integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
-
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@rtsao/scc/-/scc-1.1.0.tgz"
@@ -2480,11 +2443,6 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-equals@^2.0.3:
-  version "2.0.4"
-  resolved "https://registry.npmjs.org/fast-equals/-/fast-equals-2.0.4.tgz"
-  integrity sha512-caj/ZmjHljPrZtbzJ3kfH5ia/k4mTJe/qSiXAGzxZWRZgsgDV0cvNaQULqUX8t0/JVlzzEdYOwCN5DmzTxoD4w==
-
 fast-glob@3.3.1:
   version "3.3.1"
   resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.1.tgz"
@@ -2622,11 +2580,6 @@ functions-have-names@^1.2.2, functions-have-names@^1.2.3:
   version "1.2.3"
   resolved "https://registry.npmjs.org/functions-have-names/-/functions-have-names-1.2.3.tgz"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
-
-fuse.js@^6.6.2:
-  version "6.6.2"
-  resolved "https://registry.npmjs.org/fuse.js/-/fuse.js-6.6.2.tgz"
-  integrity sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==
 
 generator-function@^2.0.0:
   version "2.0.1"
@@ -3437,17 +3390,6 @@ katex@^0.16.0:
   integrity sha512-RQrI8rlHY92OLf3rho/Ts8i/XvjgguEjOkO1BEXcU3N8BqPpSzBNwV/G0Ukr+P/l3ivvJUE/Fa/CwbS6HesGNQ==
   dependencies:
     commander "^8.3.0"
-
-kbar@^0.1.0-beta.38:
-  version "0.1.0-beta.48"
-  resolved "https://registry.npmjs.org/kbar/-/kbar-0.1.0-beta.48.tgz"
-  integrity sha512-HD5A1dqfK6XGeoH4fRWTmRt4y76sDbtGxY4Dh2xNa5MYtvtKsqfz+nRZ0tKgcrjjGYN4rf5TLXMJuiE7Pb8rXg==
-  dependencies:
-    "@radix-ui/react-portal" "^1.0.1"
-    fast-equals "^2.0.3"
-    fuse.js "^6.6.2"
-    react-virtual "^2.8.2"
-    tiny-invariant "^1.2.0"
 
 keyv@^4.5.4:
   version "4.5.4"
@@ -4764,13 +4706,6 @@ react-tweet-embed@^2.0.0:
   resolved "https://registry.npmjs.org/react-tweet-embed/-/react-tweet-embed-2.0.0.tgz"
   integrity sha512-g2kfPjSRTOKeJtaQF5EMuSTmp/q8I0qdDs/pZ2qLXZjCWExDT/JgjxSlyM65NyNzsz8072PDpvlO/sIXwwVpdQ==
 
-react-virtual@^2.8.2:
-  version "2.10.4"
-  resolved "https://registry.npmjs.org/react-virtual/-/react-virtual-2.10.4.tgz"
-  integrity sha512-Ir6+oPQZTVHfa6+JL9M7cvMILstFZH/H3jqeYeKI4MSUX+rIruVwFC6nGVXw9wqAw8L0Kg2KvfXxI85OvYQdpQ==
-  dependencies:
-    "@reach/observe-rect" "^1.1.0"
-
 react@^19:
   version "19.2.6"
   resolved "https://registry.yarnpkg.com/react/-/react-19.2.6.tgz#3dadb8e12b2a7934c1d5317973e5dce1301f9a4d"
@@ -5536,11 +5471,6 @@ through@^2.3.8:
   version "2.3.8"
   resolved "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
-
-tiny-invariant@^1.2.0:
-  version "1.3.1"
-  resolved "https://registry.npmjs.org/tiny-invariant/-/tiny-invariant-1.3.1.tgz"
-  integrity sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==
 
 tinyglobby@^0.2.13, tinyglobby@^0.2.15:
   version "0.2.16"

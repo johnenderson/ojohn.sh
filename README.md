@@ -1,7 +1,7 @@
 # johnenderson.dev
 
-Personal website with a home page, long-form articles, RSS feed, command
-palette, theme preferences, and reading controls.
+Personal website with a home page, long-form articles, RSS feed, theme
+preferences, and reading controls.
 
 ## Stack
 

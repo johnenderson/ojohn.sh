@@ -128,14 +128,3 @@ The navbar includes a preferences panel for:
 
 The selected text size is stored in `localStorage` as `prose_font_size` and
 applied through the `--prose-font-size` CSS variable.
-
-## Keyboard Shortcuts
-
-| Shortcut | Action |
-|---|---|
-| `Ctrl+K` / `Cmd+K` | Open command palette |
-| `g` `h` | Go to Home |
-| `g` `w` | Go to Articles |
-| `f` `g` | Open GitHub |
-| `f` `t` | Open Twitter |
-| `f` `l` | Open LinkedIn |
