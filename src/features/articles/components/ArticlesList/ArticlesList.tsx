@@ -1,19 +1,19 @@
 import Link from 'next/link';
 import { FC } from 'react';
 
-import { Post } from './Post';
+import { ArticleListItem } from './ArticleListItem';
 import { listStyle, titleLinkStyle } from './style';
 import { Title } from '@/base/components/Title';
-import { getPostsList } from 'src/lib/getPostsList';
+import { getArticlesList } from '@/features/articles/lib/articles';
 
 type Header = 'h1' | 'h2' | false;
-type WritingsPropTypes = { header?: Header };
+type ArticlesListProps = { header?: Header };
 
-export const Writings: FC<WritingsPropTypes> = ({ header = 'h2' }) => {
-  const posts = getPostsList();
+export const ArticlesList: FC<ArticlesListProps> = ({ header = 'h2' }) => {
+  const articles = getArticlesList();
 
   return (
-    <section id="writings">
+    <section id="articles">
       {header === false ? null : header === 'h1' ? (
         <Title text="artigos" />
       ) : (
@@ -24,12 +24,12 @@ export const Writings: FC<WritingsPropTypes> = ({ header = 'h2' }) => {
         </Link>
       )}
       <ul style={listStyle}>
-        {posts.map((post) => (
-          <Post
-            key={post.slug}
-            datetime={post.date}
-            link={`/${post.slug}`}
-            title={post.title}
+        {articles.map((article) => (
+          <ArticleListItem
+            key={article.slug}
+            datetime={article.date}
+            link={`/${article.slug}`}
+            title={article.title}
           />
         ))}
       </ul>

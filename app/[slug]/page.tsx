@@ -4,32 +4,36 @@ import { getPlaiceholder } from 'plaiceholder';
 
 import { Layout } from '@/base/article/Layout';
 import { MDXServer } from '@/base/components/MDX/MDXServer';
-import { getPaths } from 'src/lib';
-import { getPostContent, hasPostContent } from 'src/lib/getPostContent';
-import { getPostMetadata, hasPostMetadata } from 'src/lib/getPostMetadata';
+import {
+  getArticleContent,
+  getArticleMetadata,
+  getArticlePaths,
+  hasArticleContent,
+  hasArticleMetadata,
+} from '@/features/articles/lib/articles';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  return getPaths().map(({ params }) => params);
+  return getArticlePaths().map(({ params }) => params);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
-  if (!hasPostMetadata(slug)) {
+  if (!hasArticleMetadata(slug)) {
     return {};
   }
 
-  const postMetadata = getPostMetadata(slug);
+  const articleMetadata = getArticleMetadata(slug);
 
   return {
-    title: postMetadata.title,
-    description: postMetadata.description,
+    title: articleMetadata.title,
+    description: articleMetadata.description,
     openGraph: {
-      images: [{ url: postMetadata.coverImage.src }],
+      images: [{ url: articleMetadata.coverImage.src }],
     },
   };
 }
@@ -37,29 +41,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { slug } = await params;
 
-  if (!hasPostContent(slug) || !hasPostMetadata(slug)) {
+  if (!hasArticleContent(slug) || !hasArticleMetadata(slug)) {
     notFound();
   }
 
-  const { postContent, minutes } = getPostContent(slug);
-  const postMetadata = getPostMetadata(slug);
-  const { base64, img } = await getPlaiceholder(postMetadata.coverImage.src);
+  const { content, minutes } = getArticleContent(slug);
+  const articleMetadata = getArticleMetadata(slug);
+  const { base64, img } = await getPlaiceholder(articleMetadata.coverImage.src);
 
   const coverImage = {
-    ...postMetadata.coverImage,
+    ...articleMetadata.coverImage,
     src: img.src,
     blurDataURL: base64,
   };
 
   return (
     <Layout
-      title={postMetadata.title}
-      date={postMetadata.date}
-      alternativeArticle={postMetadata.alternativeArticle}
+      title={articleMetadata.title}
+      date={articleMetadata.date}
+      alternativeArticle={articleMetadata.alternativeArticle}
       minutes={minutes}
       coverImage={coverImage}
     >
-      <MDXServer source={postContent} />
+      <MDXServer source={content} />
     </Layout>
   );
 }

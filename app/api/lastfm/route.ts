@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getLastfmStats } from 'src/lib/lastfm';
+import { getLastfmStats } from '@/lib/lastfm';
 
 export async function GET() {
   try {

@@ -1,4 +1,4 @@
-import { LastfmStats, LastfmTrack } from 'src/types/Lastfm';
+import { LastfmStats, LastfmTrack } from '@/types/Lastfm';
 
 const LASTFM_API_URL = 'https://ws.audioscrobbler.com/2.0/';
 const DEFAULT_LASTFM_USERNAME = 'johnenderson';

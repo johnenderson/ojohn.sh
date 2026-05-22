@@ -8,15 +8,15 @@ import { Title } from '@/base/article/Title';
 import { AnimationLayout } from '@/base/components/Layout/AnimationLayout';
 import { Navbar } from '@/base/components/Navbar';
 import {
-  AlternativeArticle as AlternativeArticleType,
-  CoverImage as CoverImageType,
-} from 'src/lib/getPostMetadata';
+  ArticleAlternative,
+  ArticleCoverImage,
+} from '@/features/articles/lib/articles';
 
 type LayoutPropTypes = {
   title: string;
   date: string;
-  alternativeArticle: AlternativeArticleType;
-  coverImage: CoverImageType;
+  alternativeArticle?: ArticleAlternative;
+  coverImage: ArticleCoverImage;
   minutes: number;
 };
 

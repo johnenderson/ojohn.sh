@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { FC } from 'react';
 
-import { AlternativeArticle as AlternativeArticleType } from 'src/lib/getPostMetadata';
+import { ArticleAlternative } from '@/features/articles/lib/articles';
 
 export const alternativeArticleStyle = {
   fontSize: '0.85rem',
@@ -9,7 +9,7 @@ export const alternativeArticleStyle = {
 };
 
 type AlternativeArticlePropTypes = {
-  alternativeArticle: AlternativeArticleType;
+  alternativeArticle: ArticleAlternative;
 };
 
 export const AlternativeArticle: FC<AlternativeArticlePropTypes> = ({

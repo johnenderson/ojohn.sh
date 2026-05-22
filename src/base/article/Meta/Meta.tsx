@@ -1,11 +1,11 @@
 import { FC } from 'react';
 
 import { AlternativeArticle } from '@/base/article/AlternativeArticle';
-import { AlternativeArticle as AlternativeArticleType } from 'src/lib/getPostMetadata';
+import { ArticleAlternative } from '@/features/articles/lib/articles';
 
 type MetaPropTypes = {
   date: string;
-  alternativeArticle: AlternativeArticleType;
+  alternativeArticle?: ArticleAlternative;
   minutes: number;
 };
 

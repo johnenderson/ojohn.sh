@@ -1,1 +1,0 @@
-export { Writings } from './Writings';

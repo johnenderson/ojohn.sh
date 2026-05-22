@@ -46,8 +46,9 @@ fonts from Google Fonts.
 ├── src/
 │   ├── base/           # Shared UI, article, hooks, and graph components
 │   ├── features/       # Page/domain-specific features
-│   │   └── home/       # Home and writings-list components
-│   ├── lib/            # Content loading, route generation, metadata helpers
+│   │   ├── articles/   # Article list components and content loaders
+│   │   └── home/       # Home-specific components
+│   ├── lib/            # Shared helpers and integrations
 │   └── types/          # Shared TypeScript types
 ├── public/             # Static assets
 └── styles/             # Global CSS and syntax highlighting styles

@@ -1,14 +1,14 @@
 import type { MetadataRoute } from 'next';
 
-import { getPostsList } from 'src/lib/getPostsList';
+import { getArticlesList } from '@/features/articles/lib/articles';
 
 const SITE_URL = 'https://johnenderson.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  const posts = getPostsList().map((post) => ({
-    url: `${SITE_URL}/${post.slug}`,
-    lastModified: new Date(post.date),
+  const articles = getArticlesList().map((article) => ({
+    url: `${SITE_URL}/${article.slug}`,
+    lastModified: new Date(article.date),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -32,6 +32,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
-    ...posts,
+    ...articles,
   ];
 }

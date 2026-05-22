@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import { LastfmStats, LastfmTrack } from 'src/types/Lastfm';
+import { LastfmStats, LastfmTrack } from '@/types/Lastfm';
 
 const MusicIcon = ({ size = 18 }: { size?: number }) => (
   <svg

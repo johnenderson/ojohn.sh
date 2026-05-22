@@ -1,7 +1,9 @@
 import { Feed } from 'feed';
 
-import { getPaths } from 'src/lib';
-import { getPostMetadata } from 'src/lib/getPostMetadata';
+import {
+  getArticleMetadata,
+  getArticlePaths,
+} from '@/features/articles/lib/articles';
 
 const SITE_URL = 'https://johnenderson.com';
 const AUTHOR = { name: 'John Enderson', link: SITE_URL };
@@ -26,12 +28,12 @@ export async function GET() {
     author: AUTHOR,
   });
 
-  const paths = getPaths();
+  const paths = getArticlePaths();
 
-  const posts = paths
+  const articles = paths
     .map(({ params: { slug } }) => {
       try {
-        return { slug, ...getPostMetadata(slug) };
+        return { slug, ...getArticleMetadata(slug) };
       } catch {
         return null;
       }
@@ -39,14 +41,14 @@ export async function GET() {
     .filter(Boolean)
     .sort((a, b) => toDate(b!.date).getTime() - toDate(a!.date).getTime());
 
-  for (const post of posts) {
-    if (!post) continue;
+  for (const article of articles) {
+    if (!article) continue;
     feed.addItem({
-      title: post.title,
-      id: `${SITE_URL}/${post.slug}`,
-      link: `${SITE_URL}/${post.slug}`,
-      description: post.description ?? '',
-      date: toDate(post.date),
+      title: article.title,
+      id: `${SITE_URL}/${article.slug}`,
+      link: `${SITE_URL}/${article.slug}`,
+      description: article.description ?? '',
+      date: toDate(article.date),
       author: [AUTHOR],
     });
   }
