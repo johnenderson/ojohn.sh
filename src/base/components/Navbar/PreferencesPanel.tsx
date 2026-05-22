@@ -6,6 +6,7 @@ import { Theme, useTheme } from '@/base/components/Theme';
 
 const FONT_SIZES = ['14px', '16px', '17px', '18px', '20px'];
 const DEFAULT_FONT_SIZE = '17px';
+const ELEVATOR_SPEED_KEY = 'elevator_speed';
 
 const isFontSize = (value: string | null): value is (typeof FONT_SIZES)[number] =>
   value !== null && FONT_SIZES.includes(value);
@@ -30,6 +31,20 @@ function useLocalFontSize() {
   return [fontSize, setFontSize] as const;
 }
 
+function useElevatorSpeed() {
+  const [makeElevatorFaster, setMakeElevatorFasterState] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(ELEVATOR_SPEED_KEY) === 'true';
+  });
+
+  const setMakeElevatorFaster = (enabled: boolean) => {
+    setMakeElevatorFasterState(enabled);
+    localStorage.setItem(ELEVATOR_SPEED_KEY, String(enabled));
+  };
+
+  return [makeElevatorFaster, setMakeElevatorFaster] as const;
+}
+
 /* ── Icons ── */
 const GearIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -47,6 +62,12 @@ const PaletteIcon = () => (
 const TextSizeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M11.246 15H4.75416L2.75416 20H0.600098L7.0001 4H9.0001L15.4001 20H13.246L11.246 15ZM10.446 13L8.0001 6.88516L5.55416 13H10.446ZM21.0001 12.5351V12H23.0001V20H21.0001V19.4649C20.4118 19.8052 19.7287 20 19.0001 20C16.791 20 15.0001 18.2091 15.0001 16C15.0001 13.7909 16.791 12 19.0001 12C19.7287 12 20.4118 12.1948 21.0001 12.5351ZM19.0001 18C20.1047 18 21.0001 17.1046 21.0001 16C21.0001 14.8954 20.1047 14 19.0001 14C17.8955 14 17.0001 14.8954 17.0001 16C17.0001 17.1046 17.8955 18 19.0001 18Z" />
+  </svg>
+);
+
+const SpeedIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M13 6.82843V20H11V6.82843L5.63604 12.1924L4.22183 10.7782L12 3L19.7782 10.7782L18.364 12.1924L13 6.82843Z" />
   </svg>
 );
 
@@ -121,6 +142,35 @@ const ThemeSelector = ({
   );
 };
 
+const Switch = ({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+}) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    aria-label={label}
+    onClick={() => onChange(!checked)}
+    className={`flex h-5 w-9 shrink-0 items-center overflow-hidden rounded-full p-0.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-site-primary ${
+      checked ? 'bg-site-primary' : 'bg-site-border'
+    }`}
+  >
+    <span
+      className={`size-4 rounded-full transition-transform ${
+        checked
+          ? 'translate-x-4 bg-site-primary-foreground'
+          : 'translate-x-0 bg-site-foreground'
+      }`}
+    />
+  </button>
+);
+
 /* ── Main component ── */
 export const PreferencesPanel = ({
   panelAlign = 'right',
@@ -132,6 +182,7 @@ export const PreferencesPanel = ({
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [fontSize, setFontSize] = useLocalFontSize();
+  const [makeElevatorFaster, setMakeElevatorFaster] = useElevatorSpeed();
   const panelRef = useRef<HTMLDivElement>(null);
   const panelPositionClass =
     panelPosition === 'top'
@@ -155,6 +206,7 @@ export const PreferencesPanel = ({
   const reset = () => {
     setTheme('dark');
     setFontSize(DEFAULT_FONT_SIZE);
+    setMakeElevatorFaster(false);
   };
 
   return (
@@ -230,6 +282,23 @@ export const PreferencesPanel = ({
                   <PlusIcon />
                 </button>
               </div>
+            </div>
+
+            {/* Elevator speed */}
+            <div className="flex items-center justify-between p-3 gap-4">
+              <div className="flex items-center gap-3">
+                <span className="text-site-body-muted shrink-0">
+                  <SpeedIcon />
+                </span>
+                <p className="text-sm text-site-foreground m-0">
+                  Deixar elevador mais rápido
+                </p>
+              </div>
+              <Switch
+                checked={makeElevatorFaster}
+                onChange={setMakeElevatorFaster}
+                label="Deixar elevador mais rápido"
+              />
             </div>
           </div>
 
