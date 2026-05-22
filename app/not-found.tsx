@@ -8,14 +8,14 @@ export default function NotFound() {
       <main id="main">
         <div className="content">
           <section className="flex max-w-2xl flex-col gap-5">
-            <p className="m-0 text-sm font-medium uppercase tracking-widest text-[#8f879b] light:text-[#777]">
+            <p className="m-0 text-sm font-medium uppercase tracking-widest text-site-body-muted">
               404
             </p>
             <div className="flex flex-col gap-3">
-              <h1 className="m-0 text-4xl font-bold leading-tight text-white light:text-[#333]">
+              <h1 className="m-0 text-4xl font-bold leading-tight text-site-foreground">
                 Página não encontrada
               </h1>
-              <p className="m-0 text-[#b8b2c2] light:text-[#555]">
+              <p className="m-0 text-site-body">
                 O caminho que você tentou acessar não existe ou foi movido.
               </p>
             </div>

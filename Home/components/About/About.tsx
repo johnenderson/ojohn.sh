@@ -7,10 +7,10 @@ import { SocialIcons } from 'Base/components/SocialIcons';
 export const About: FC = () => (
   <section id="about" className="flex flex-col gap-4">
     <div>
-      <p className="no-margin-top text-white light:text-[#333]">
+      <p className="no-margin-top text-site-foreground">
         Desenvolvedor backend
       </p>
-      <p className="no-margin max-w-2xl text-[#b8b2c2] light:text-[#555]">
+      <p className="no-margin max-w-2xl text-site-body">
         Crio coisas com Java e Spring Boot, subo infraestrutura com Terraform e AWS.
         <br />
         Atualmente trabalho no{' '}

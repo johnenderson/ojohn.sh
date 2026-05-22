@@ -4,6 +4,7 @@ import { AnimationLayout } from 'Base/components/Layout/AnimationLayout';
 import { Navbar } from 'Base/components/Navbar';
 import { Title } from 'Base/components/Title';
 import { About } from 'Home/components/About';
+import { LastfmCard } from 'Home/components/Activity';
 import { SkipLink } from 'Home/components/SkipLink';
 import { Writings } from 'Home/components/Writings';
 
@@ -27,6 +28,7 @@ export default function Page() {
           <div className="content">
             <Title text="John Enderson" />
             <About />
+            <LastfmCard />
             <Writings />
           </div>
         </main>

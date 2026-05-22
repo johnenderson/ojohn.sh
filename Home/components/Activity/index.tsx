@@ -1,0 +1,1 @@
+export { LastfmCard } from './LastfmCard';

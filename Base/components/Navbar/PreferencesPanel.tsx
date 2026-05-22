@@ -95,10 +95,10 @@ const ThemeSelector = ({
   const idx = activeIdx >= 0 ? activeIdx : 0;
 
   return (
-    <div className="relative flex gap-0 rounded border border-[#8b5cf6]/25 p-1 light:border-[#8b5cf6]/20">
+    <div className="relative flex gap-0 rounded border border-site-border p-1">
       {/* sliding indicator */}
       <span
-        className="absolute top-1 h-7 rounded bg-[#8b5cf6] transition-all duration-300 ease-elastic"
+        className="absolute top-1 h-7 rounded bg-site-primary transition-all duration-300 ease-elastic"
         style={{ width: PILL_WIDTH, left: `calc(0.25rem + ${idx * PILL_WIDTH}px)` }}
       />
       {THEME_OPTIONS.map((opt) => (
@@ -109,8 +109,8 @@ const ThemeSelector = ({
           aria-label={`Tema ${opt.value}`}
           className={`relative z-10 flex h-7 cursor-pointer items-center justify-center rounded text-sm transition-colors duration-200 ${
             theme === opt.value
-              ? 'text-white'
-              : 'text-[#8f879b] hover:text-[#a78bfa] light:text-[#777] light:hover:text-[#7c3aed]'
+              ? 'text-site-primary-foreground'
+              : 'text-site-body-muted hover:text-site-primary-hover'
           }`}
           style={{ width: PILL_WIDTH }}
         >
@@ -122,11 +122,22 @@ const ThemeSelector = ({
 };
 
 /* ── Main component ── */
-export const PreferencesPanel = () => {
+export const PreferencesPanel = ({
+  panelAlign = 'right',
+  panelPosition = 'bottom',
+}: {
+  panelAlign?: 'left' | 'right';
+  panelPosition?: 'top' | 'bottom';
+}) => {
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [fontSize, setFontSize] = useLocalFontSize();
   const panelRef = useRef<HTMLDivElement>(null);
+  const panelPositionClass =
+    panelPosition === 'top'
+      ? 'bottom-[calc(100%+0.75rem)]'
+      : 'top-[calc(100%+0.75rem)]';
+  const panelAlignClass = panelAlign === 'left' ? 'left-0' : 'right-0';
 
   const fontSizeIdx = Math.max(FONT_SIZES.indexOf(fontSize), 0);
 
@@ -154,18 +165,18 @@ export const PreferencesPanel = () => {
         aria-label="Preferências"
         className={`flex items-center justify-center w-8 h-8 transition-colors duration-200 ${
           open
-            ? 'text-[#a78bfa] light:text-[#7c3aed]'
-            : 'text-[#8f879b] hover:text-[#a78bfa] light:text-[#777] light:hover:text-[#7c3aed]'
+            ? 'text-site-primary'
+            : 'text-site-body-muted hover:text-site-primary-hover'
         }`}
       >
         <GearIcon />
       </button>
 
       {open && (
-        <div className="prefs-panel absolute right-0 top-[calc(100%+0.75rem)] w-[calc(100dvw-3rem)] md:w-[26rem] rounded-lg border border-[#8b5cf6]/25 shadow-2xl z-50 overflow-hidden light:border-[#8b5cf6]/20">
+        <div className={`prefs-panel absolute ${panelAlignClass} ${panelPositionClass} w-[calc(100dvw-3rem)] md:w-[26rem] rounded-lg border border-site-border shadow-2xl z-50 overflow-hidden`}>
           {/* Header */}
-          <div className="px-4 py-3 border-b border-[#8b5cf6]/10">
-            <p className="text-lg font-medium text-white light:text-[#333] m-0">
+          <div className="px-4 py-3 border-b border-site-border-subtle">
+            <p className="text-lg font-medium text-site-foreground m-0">
               Preferências
             </p>
           </div>
@@ -175,10 +186,10 @@ export const PreferencesPanel = () => {
             {/* Theme */}
             <div className="flex items-center justify-between p-3 gap-4">
               <div className="flex items-center gap-3">
-                <span className="text-[#8f879b] light:text-[#777] shrink-0">
+                <span className="text-site-body-muted shrink-0">
                   <PaletteIcon />
                 </span>
-                <p className="text-sm text-[#d8d3df] light:text-[#555] m-0">Tema</p>
+                <p className="text-sm text-site-foreground m-0">Tema</p>
               </div>
               <ThemeSelector theme={theme} setTheme={setTheme} />
             </div>
@@ -186,12 +197,12 @@ export const PreferencesPanel = () => {
             {/* Font size */}
             <div className="flex items-center justify-between p-3 gap-4">
               <div className="flex items-center gap-3">
-                <span className="text-[#8f879b] light:text-[#777] shrink-0">
+                <span className="text-site-body-muted shrink-0">
                   <TextSizeIcon />
                 </span>
                 <div>
-                  <p className="text-sm text-[#d8d3df] light:text-[#555] m-0">Tamanho do texto</p>
-                  <p className="text-xs text-[#8f879b] light:text-[#999] m-0 -mt-px">
+                  <p className="text-sm text-site-foreground m-0">Tamanho do texto</p>
+                  <p className="text-xs text-site-body-muted m-0 -mt-px">
                     No blog e páginas com muito texto
                   </p>
                 </div>
@@ -202,11 +213,11 @@ export const PreferencesPanel = () => {
                   type="button"
                   aria-label="Diminuir tamanho do texto"
                   disabled={fontSizeIdx === 0}
-                  className="flex h-9 w-9 items-center justify-center rounded rounded-r-none border border-[#8b5cf6]/25 bg-transparent text-[#8f879b] hover:text-[#a78bfa] hover:bg-[#8b5cf6]/10 disabled:opacity-35 disabled:cursor-not-allowed transition-colors light:text-[#777] light:hover:text-[#7c3aed]"
+                  className="flex h-9 w-9 items-center justify-center rounded rounded-r-none border border-site-border bg-transparent text-site-body-muted hover:text-site-primary-hover hover:bg-site-primary-soft disabled:opacity-35 disabled:cursor-not-allowed transition-colors"
                 >
                   <MinusIcon />
                 </button>
-                <span className="flex h-9 w-14 cursor-default items-center justify-center border-y border-[#8b5cf6]/25 text-sm text-[#d8d3df] light:text-[#555] select-none tabular-nums">
+                <span className="flex h-9 w-14 cursor-default items-center justify-center border-y border-site-border text-sm text-site-foreground select-none tabular-nums">
                   {fontSize}
                 </span>
                 <button
@@ -214,7 +225,7 @@ export const PreferencesPanel = () => {
                   type="button"
                   aria-label="Aumentar tamanho do texto"
                   disabled={fontSizeIdx === FONT_SIZES.length - 1}
-                  className="flex h-9 w-9 items-center justify-center rounded rounded-l-none border border-[#8b5cf6]/25 bg-transparent text-[#8f879b] hover:text-[#a78bfa] hover:bg-[#8b5cf6]/10 disabled:opacity-35 disabled:cursor-not-allowed transition-colors light:text-[#777] light:hover:text-[#7c3aed]"
+                  className="flex h-9 w-9 items-center justify-center rounded rounded-l-none border border-site-border bg-transparent text-site-body-muted hover:text-site-primary-hover hover:bg-site-primary-soft disabled:opacity-35 disabled:cursor-not-allowed transition-colors"
                 >
                   <PlusIcon />
                 </button>
@@ -223,11 +234,11 @@ export const PreferencesPanel = () => {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-3 border-t border-[#8b5cf6]/10 flex justify-end">
+          <div className="px-4 py-3 border-t border-site-border-subtle flex justify-end">
             <button
               onClick={reset}
               type="button"
-              className="text-sm text-[#8f879b] hover:text-[#a78bfa] transition-colors light:text-[#777] light:hover:text-[#7c3aed]"
+              className="text-sm text-site-body-muted hover:text-site-primary-hover transition-colors"
             >
               Redefinir preferências
             </button>

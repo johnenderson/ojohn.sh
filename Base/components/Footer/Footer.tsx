@@ -19,7 +19,7 @@ const ScrollToTop: FC = () => {
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       aria-label="Voltar ao topo"
-      className={`fixed bottom-0 right-0 p-4 md:p-6 text-[#8f879b] hover:text-white light:text-[#999] light:hover:text-[#333] transition-all duration-300 cursor-pointer ${
+      className={`fixed bottom-0 right-0 p-4 md:p-6 text-site-body-muted hover:text-site-foreground transition-all duration-300 cursor-pointer ${
         visible
           ? 'opacity-100 translate-y-0 pointer-events-auto'
           : 'opacity-0 translate-y-2 pointer-events-none'
@@ -34,12 +34,12 @@ const ScrollToTop: FC = () => {
 
 export const Footer: FC = () => (
   <>
-    <footer className="mt-12 mb-6 border-t border-[#8b5cf6]/20 light:border-[#e4e4e7] pt-6 text-center md:text-left mx-auto max-w-5xl px-6 lg:px-0">
-      <div className="flex flex-col items-center md:items-start text-sm text-[#8f879b] light:text-[#777]">
+    <footer className="mt-12 mb-6 border-t border-site-border pt-6 text-center md:text-left mx-auto max-w-5xl px-6 lg:px-0">
+      <div className="flex flex-col items-center md:items-start text-sm text-site-body-muted">
         <p className="m-0">
           &copy; {new Date().getFullYear()} John Enderson
         </p>
-        <p className="m-0 text-[#736c7d] light:text-[#999]">
+        <p className="m-0 text-site-body-muted">
           Feito com Next.js
         </p>
       </div>

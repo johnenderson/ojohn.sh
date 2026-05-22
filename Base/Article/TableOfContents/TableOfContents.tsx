@@ -55,10 +55,10 @@ export const TableOfContents = () => {
   const activeIdx = headings.findIndex((h) => h.id === activeId);
 
   return (
-    <aside className="sticky hidden h-fit w-full max-w-[19rem] shrink-0 flex-col gap-3 border-l border-[#8b5cf6]/20 lg:flex light:border-[#8b5cf6]/25 text-lg"
+    <aside className="sticky hidden h-fit w-full max-w-[19rem] shrink-0 flex-col gap-3 border-l border-site-border lg:flex text-lg"
       style={{ top: '8rem' }}
     >
-      <p className="ml-6 font-semibold text-white light:text-[#333]">
+      <p className="ml-6 font-semibold text-site-foreground">
         Nesse artigo
       </p>
       <div className="relative flex flex-col gap-1.5">
@@ -80,8 +80,8 @@ export const TableOfContents = () => {
               heading.level === 3 ? 'pl-10' : 'pl-6'
             } ${
               activeId === heading.id
-                ? 'text-[#a78bfa] light:text-[#7c3aed]'
-                : 'text-[#444] hover:text-[#a78bfa] light:text-[#aaa] light:hover:text-[#7c3aed]'
+                ? 'text-site-primary'
+                : 'text-site-body hover:text-site-primary-hover'
             }`}
           >
             {heading.text}
@@ -90,7 +90,7 @@ export const TableOfContents = () => {
 
         {/* Moving active indicator bar — same as doce.sh */}
         <span
-          className="absolute -left-px w-px h-6 bg-[#8b5cf6] transition-all duration-300 ease-elastic"
+          className="absolute -left-px w-px h-6 bg-site-primary transition-all duration-300 ease-elastic"
           style={{ top: `${(activeIdx >= 0 ? activeIdx : 0) * ITEM_HEIGHT}px` }}
         />
       </div>
