@@ -319,6 +319,13 @@ export function hasArticleContent(
   return fs.existsSync(getArticleContentPath(slug, locale));
 }
 
+export function getArticleContentVersion(
+  slug: string,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
+) {
+  return fs.statSync(getArticleContentPath(slug, locale)).mtimeMs;
+}
+
 export function getArticleContent(
   slug: string,
   locale: Locale = DEFAULT_ARTICLE_LOCALE,
