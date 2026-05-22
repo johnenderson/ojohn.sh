@@ -8,6 +8,7 @@ import { Language } from '@/lib/languages';
 import { Locale } from '@/types/Locale';
 
 const CONTENT_DIR = path.join(process.cwd(), 'content');
+const DEFAULT_ARTICLE_LOCALE: Locale = Language.PT_BR;
 
 export type ArticleCoverImage = {
   src: string;
@@ -39,11 +40,14 @@ export type ArticleListItem = {
   date: string;
 };
 
-function getArticleDir(slug: string, locale: Locale = Language.EN) {
+function getArticleDir(slug: string, locale: Locale = DEFAULT_ARTICLE_LOCALE) {
   return path.join(CONTENT_DIR, slug, locale);
 }
 
-function getArticleContentPath(slug: string, locale: Locale = Language.EN) {
+function getArticleContentPath(
+  slug: string,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
+) {
   return path.join(getArticleDir(slug, locale), 'index.mdx');
 }
 
@@ -270,7 +274,10 @@ function parseFrontmatter(frontmatter: string, context: string) {
   return metadata;
 }
 
-function readArticleFile(slug: string, locale: Locale = Language.EN) {
+function readArticleFile(
+  slug: string,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
+) {
   const content = fs.readFileSync(getArticleContentPath(slug, locale), 'utf8');
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   const context = `${slug}/${locale}`;
@@ -288,7 +295,10 @@ function readArticleFile(slug: string, locale: Locale = Language.EN) {
   };
 }
 
-export function hasArticleMetadata(slug: string, locale: Locale = Language.EN) {
+export function hasArticleMetadata(
+  slug: string,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
+) {
   if (!hasArticleContent(slug, locale)) return false;
 
   const content = fs.readFileSync(getArticleContentPath(slug, locale), 'utf8');
@@ -297,16 +307,22 @@ export function hasArticleMetadata(slug: string, locale: Locale = Language.EN) {
 
 export function getArticleMetadata(
   slug: string,
-  locale: Locale = Language.EN,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
 ): ArticleMetadata {
   return readArticleFile(slug, locale).metadata;
 }
 
-export function hasArticleContent(slug: string, locale: Locale = Language.EN) {
+export function hasArticleContent(
+  slug: string,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
+) {
   return fs.existsSync(getArticleContentPath(slug, locale));
 }
 
-export function getArticleContent(slug: string, locale: Locale = Language.EN) {
+export function getArticleContent(
+  slug: string,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
+) {
   const { content } = readArticleFile(slug, locale);
   const { minutes } = readingTime(content);
 
@@ -316,7 +332,7 @@ export function getArticleContent(slug: string, locale: Locale = Language.EN) {
   };
 }
 
-export function getArticlePaths(locale: Locale = Language.EN) {
+export function getArticlePaths(locale: Locale = DEFAULT_ARTICLE_LOCALE) {
   return fs
     .readdirSync(CONTENT_DIR)
     .filter((slug) => fs.existsSync(getArticleDir(slug, locale)))
@@ -328,7 +344,7 @@ export function getArticlePaths(locale: Locale = Language.EN) {
 }
 
 export function getArticlesList(
-  locale: Locale = Language.EN,
+  locale: Locale = DEFAULT_ARTICLE_LOCALE,
 ): ArticleListItem[] {
   return fs
     .readdirSync(CONTENT_DIR)

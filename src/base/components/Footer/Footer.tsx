@@ -6,8 +6,7 @@ const ELEVATOR_SPEED_KEY = 'elevator_speed';
 const NORMAL_SCROLL_SPEED = 600;
 const FAST_SCROLL_SPEED = 1000;
 
-const easeOutSine = (progress: number) =>
-  Math.sin((progress * Math.PI) / 2);
+const easeOutSine = (progress: number) => Math.sin((progress * Math.PI) / 2);
 
 const ScrollToTop: FC = () => {
   const [visible, setVisible] = useState(false);
@@ -38,8 +37,7 @@ const ScrollToTop: FC = () => {
 
       const timeElapsed = currentTime - startTime;
       const progress = Math.min(timeElapsed / duration, 1);
-      const currentPosition =
-        startPosition - distance * easeOutSine(progress);
+      const currentPosition = startPosition - distance * easeOutSine(progress);
 
       window.scrollTo(0, currentPosition);
 
@@ -61,7 +59,17 @@ const ScrollToTop: FC = () => {
           : 'opacity-0 translate-y-2 pointer-events-none'
       }`}
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <polyline points="18 15 12 9 6 15" />
       </svg>
     </button>
@@ -72,11 +80,9 @@ export const Footer: FC = () => (
   <>
     <footer className="mt-12 mb-6 border-t border-site-border pt-6 text-center md:text-left mx-auto max-w-5xl px-6 lg:px-0">
       <div className="flex flex-col items-center md:items-start text-sm text-site-body-muted">
-        <p className="m-0">
-          &copy; {new Date().getFullYear()} John Enderson
-        </p>
+        <p className="m-0">&copy; {new Date().getFullYear()} John Enderson</p>
         <p className="m-0 text-site-body-muted">
-          Feito com Next.js
+          Website licenciado sob a MIT.
         </p>
       </div>
     </footer>

@@ -261,6 +261,7 @@ article h1 {
   margin-bottom: 0;
   text-transform: none;
   line-height: 1.25;
+  text-wrap: balance;
 }
 
 html.light article h1 {
@@ -269,32 +270,75 @@ html.light article h1 {
 
 article h2 {
   position: relative;
-  font-size: 1.7rem;
-  font-weight: bold;
+  font-size: 1.95rem;
+  font-weight: 750;
   text-transform: none;
-  letter-spacing: normal;
-  margin-top: 2.75rem;
-  margin-bottom: 0.75rem;
-  color: #eee;
+  letter-spacing: 0;
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  color: var(--site-foreground);
   display: block;
-  line-height: 40px;
+  line-height: 1.2;
+  scroll-margin-top: 7rem;
+  text-wrap: balance;
+}
+
+article h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.16em;
+  bottom: 0.16em;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    var(--site-primary),
+    color-mix(in srgb, var(--site-primary) 28%, transparent)
+  );
 }
 
 html.light article h2 {
-  color: #333;
+  color: var(--site-foreground);
 }
 
 article h3 {
-  margin-top: 1.75rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #eee;
-  line-height: 30px;
+  position: relative;
+  margin-top: 2.4rem;
+  margin-bottom: 0.75rem;
+  padding-left: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--site-foreground);
+  line-height: 1.32;
+  scroll-margin-top: 7rem;
+  text-wrap: balance;
+}
+
+article h3::before {
+  content: none;
 }
 
 html.light article h3 {
-  color: #333;
+  color: var(--site-foreground);
+}
+
+article h4 {
+  margin-top: 1.9rem;
+  margin-bottom: 0.55rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--site-body-muted);
+  line-height: 1.35;
+  scroll-margin-top: 7rem;
+  text-wrap: balance;
+}
+
+html.light article h4 {
+  color: var(--site-foreground);
 }
 
 article.post > p,
@@ -368,6 +412,141 @@ article blockquote::before {
 
 html.light article blockquote::before {
   color: #333;
+}
+
+.mdx-admonition {
+  --admonition-accent: var(--site-primary);
+  --admonition-bg: color-mix(
+    in srgb,
+    var(--admonition-accent) 11%,
+    transparent
+  );
+  --admonition-border: color-mix(
+    in srgb,
+    var(--admonition-accent) 44%,
+    transparent
+  );
+  --admonition-icon-bg: color-mix(
+    in srgb,
+    var(--admonition-accent) 18%,
+    transparent
+  );
+  --admonition-icon-text: var(--admonition-accent);
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--admonition-border);
+  border-left-width: 4px;
+  border-radius: 6px;
+  background: var(--admonition-bg);
+  color: var(--site-foreground);
+}
+
+.mdx-admonition-info {
+  --admonition-accent: #6bb7ff;
+}
+
+.mdx-admonition-note,
+.mdx-admonition-secondary {
+  --admonition-accent: var(--site-primary);
+}
+
+.mdx-admonition-tip {
+  --admonition-accent: #79d9a5;
+}
+
+.mdx-admonition-warning {
+  --admonition-accent: #f5b84b;
+}
+
+.mdx-admonition-danger {
+  --admonition-accent: #ff7b7b;
+}
+
+html.light .mdx-admonition {
+  --admonition-bg: color-mix(in srgb, var(--admonition-accent) 13%, white);
+  --admonition-border: color-mix(
+    in srgb,
+    var(--admonition-accent) 55%,
+    transparent
+  );
+  --admonition-icon-bg: color-mix(in srgb, var(--admonition-accent) 18%, white);
+  --admonition-icon-text: color-mix(
+    in srgb,
+    var(--admonition-accent) 72%,
+    #17131d
+  );
+  color: var(--site-foreground);
+}
+
+html.light .mdx-admonition-info {
+  --admonition-accent: #1476b8;
+}
+
+html.light .mdx-admonition-tip {
+  --admonition-accent: #147d43;
+}
+
+html.light .mdx-admonition-warning {
+  --admonition-accent: var(--site-primary);
+}
+
+html.light .mdx-admonition-danger {
+  --admonition-accent: #bd2b2b;
+}
+
+.mdx-admonition-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.45rem;
+  color: var(--site-foreground);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.mdx-admonition-icon {
+  display: inline-flex;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--admonition-icon-bg);
+  color: var(--admonition-icon-text);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.mdx-admonition-content > :first-child {
+  margin-top: 0;
+}
+
+.mdx-admonition-content > :last-child {
+  margin-bottom: 0;
+}
+
+.mdx-admonition-content p,
+.mdx-admonition-content li {
+  color: var(--site-foreground);
+  line-height: 1.7;
+}
+
+html.light .mdx-admonition-content p,
+html.light .mdx-admonition-content li {
+  color: #3f3f46;
+}
+
+.mdx-admonition-content ul,
+.mdx-admonition-content ol {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.25rem;
+}
+
+.mdx-admonition-content a {
+  text-decoration-color: var(--admonition-border);
 }
 
 a,
@@ -584,12 +763,18 @@ p.no-margin-top {
 }
 
 .content pre {
-  background: #0f111a !important;
-  border: 1px solid rgba(137, 221, 255, 0.14);
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.32);
+  background: var(--site-card) !important;
+  border: 1px solid var(--site-border-subtle);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.22);
   margin: 28px 0;
   padding: 1.35rem 1.45rem;
   position: relative;
+}
+
+html.light .content pre {
+  background: var(--site-card) !important;
+  border-color: var(--site-border-subtle);
+  box-shadow: 0 16px 42px rgba(39, 33, 47, 0.1);
 }
 
 .content pre,
@@ -646,10 +831,10 @@ html.light .content pre code {
 }
 
 .code-copy-button {
-  background: rgba(137, 221, 255, 0.08);
-  border: 1px solid rgba(137, 221, 255, 0.22);
+  background: var(--site-primary-soft);
+  border: 1px solid var(--site-border);
   border-radius: 6px;
-  color: #d7e9ff;
+  color: var(--site-primary-hover);
   cursor: pointer;
   font-family: var(--font-geist-sans), 'Geist', sans-serif;
   font-size: 12px;
@@ -671,8 +856,8 @@ html.light .content pre code {
 
 .code-copy-button:hover,
 .code-copy-button:focus-visible {
-  background: rgba(137, 221, 255, 0.16);
-  border-color: rgba(137, 221, 255, 0.42);
+  background: color-mix(in srgb, var(--site-primary) 16%, transparent);
+  border-color: var(--site-primary);
   outline: none;
 }
 

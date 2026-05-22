@@ -53,7 +53,7 @@ interface MDXPropTypes {
 }
 
 const rehypeShikiOptions = {
-  theme: 'material-theme-ocean',
+  theme: 'rose-pine-moon',
 };
 
 export const serializeMDX = (content: string) =>

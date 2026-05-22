@@ -7,6 +7,14 @@ import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
 import { TweetEmbed } from './TweetEmbedClient';
+import {
+  Admonition,
+  Danger,
+  Info,
+  Note,
+  Tip,
+  Warning,
+} from '@/base/components/Admonition';
 import { PostAndDate } from '@/base/components/PostAndDate';
 import { SideBySideImages } from '@/base/components/SideBySideImages';
 import { SideBySideVideos } from '@/base/components/SideBySideVideos';
@@ -44,18 +52,24 @@ const SafeBlockMath = (props: {
 }) => <BlockMath math={props.math ?? mathChildrenToString(props.children)} />;
 
 const components = {
+  Admonition,
+  Danger,
+  Info,
+  Note,
   PostAndDate,
   SideBySideImages,
+  Tip,
   TweetEmbed,
   SmoothRender,
   SideBySideVideos,
+  Warning,
   InlineMath: SafeInlineMath,
   BlockMath: SafeBlockMath,
   Venn,
 };
 
 const rehypeShikiOptions = {
-  theme: 'material-theme-ocean',
+  theme: 'rose-pine-moon',
 };
 
 interface MDXServerProps {
