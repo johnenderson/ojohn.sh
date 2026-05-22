@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
+    "content:sync": "node scripts/generate-article-content-registry.mjs",
+    "predev": "yarn content:sync",
     "dev": "next dev",
+    "prebuild": "yarn content:sync",
     "build": "next build",
     "start": "next start",
+    "prelint": "yarn content:sync",
     "lint": "eslint app src --ext .ts,.tsx",
     "prettier:check": "prettier --check '**/*.{ts,tsx}'",
     "prettier:fix": "prettier --write '**/*.{ts,tsx}'",
     "eslint:fix": "eslint --cache --fix",
+    "pretypecheck": "yarn content:sync",
     "typecheck": "tsc",
     "prepare": "husky install",
     "update:webperf": "cd packages/scripts && yarn build:repo-content"

@@ -1,13 +1,14 @@
 import { ImageProps } from 'next/image';
 
-import fs from 'fs';
-import path from 'path';
 import readingTime from 'reading-time';
 
+import {
+  getArticleSlugs,
+  getArticleSource,
+} from '@/features/articles/lib/article-content';
 import { Language } from '@/lib/languages';
 import { Locale } from '@/types/Locale';
 
-const CONTENT_DIR = path.join(process.cwd(), 'content');
 const DEFAULT_ARTICLE_LOCALE: Locale = Language.PT_BR;
 
 export type ArticleCoverImage = {
@@ -39,17 +40,6 @@ export type ArticleListItem = {
   title: string;
   date: string;
 };
-
-function getArticleDir(slug: string, locale: Locale = DEFAULT_ARTICLE_LOCALE) {
-  return path.join(CONTENT_DIR, slug, locale);
-}
-
-function getArticleContentPath(
-  slug: string,
-  locale: Locale = DEFAULT_ARTICLE_LOCALE,
-) {
-  return path.join(getArticleDir(slug, locale), 'index.mdx');
-}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -278,16 +268,21 @@ function readArticleFile(
   slug: string,
   locale: Locale = DEFAULT_ARTICLE_LOCALE,
 ) {
-  const content = fs.readFileSync(getArticleContentPath(slug, locale), 'utf8');
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  const source = getArticleSource(slug, locale);
   const context = `${slug}/${locale}`;
+
+  if (!source) {
+    throw new Error(`Missing article content for ${context}.`);
+  }
+
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
 
   if (!match) {
     throw new Error(`Missing article frontmatter for ${context}.`);
   }
 
   return {
-    content: content.slice(match[0].length),
+    content: source.slice(match[0].length),
     metadata: parseArticleMetadata(
       parseFrontmatter(match[1], context),
       context,
@@ -301,8 +296,7 @@ export function hasArticleMetadata(
 ) {
   if (!hasArticleContent(slug, locale)) return false;
 
-  const content = fs.readFileSync(getArticleContentPath(slug, locale), 'utf8');
-  return /^---\r?\n[\s\S]*?\r?\n---/.test(content);
+  return /^---\r?\n[\s\S]*?\r?\n---/.test(getArticleSource(slug, locale) ?? '');
 }
 
 export function getArticleMetadata(
@@ -316,14 +310,7 @@ export function hasArticleContent(
   slug: string,
   locale: Locale = DEFAULT_ARTICLE_LOCALE,
 ) {
-  return fs.existsSync(getArticleContentPath(slug, locale));
-}
-
-export function getArticleContentVersion(
-  slug: string,
-  locale: Locale = DEFAULT_ARTICLE_LOCALE,
-) {
-  return fs.statSync(getArticleContentPath(slug, locale)).mtimeMs;
+  return getArticleSource(slug, locale) != null;
 }
 
 export function getArticleContent(
@@ -340,21 +327,17 @@ export function getArticleContent(
 }
 
 export function getArticlePaths(locale: Locale = DEFAULT_ARTICLE_LOCALE) {
-  return fs
-    .readdirSync(CONTENT_DIR)
-    .filter((slug) => fs.existsSync(getArticleDir(slug, locale)))
-    .map((slug) => ({
-      params: {
-        slug,
-      },
-    }));
+  return getArticleSlugs(locale).map((slug) => ({
+    params: {
+      slug,
+    },
+  }));
 }
 
 export function getArticlesList(
   locale: Locale = DEFAULT_ARTICLE_LOCALE,
 ): ArticleListItem[] {
-  return fs
-    .readdirSync(CONTENT_DIR)
+  return getArticleSlugs(locale)
     .filter((slug) => hasArticleMetadata(slug, locale))
     .map((slug) => {
       const metadata = getArticleMetadata(slug, locale);

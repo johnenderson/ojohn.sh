@@ -56,11 +56,14 @@ fonts from Google Fonts.
 
 ## Adding Content
 
-Each article currently lives in:
+Each article lives in one or more locale folders:
 
 ```text
-content/<slug>/en/
-└── index.mdx
+content/<slug>/
+├── en/
+│   └── index.mdx
+└── pt-BR/
+    └── index.mdx
 ```
 
 Example article:
@@ -86,13 +89,25 @@ Article body.
 The article body goes below the frontmatter. Headings receive IDs through the MDX
 pipeline and are used by the article table of contents.
 
+Article imports are generated from the `content` folder by:
+
+```bash
+yarn content:sync
+```
+
+`yarn dev`, `yarn build`, `yarn lint`, and `yarn typecheck` run this automatically.
+Keeping generated raw MDX imports in the module graph lets Next.js and
+Turbopack handle local HMR for article edits without custom polling or
+development-only API endpoints.
+
 ## MDX Components
 
 The MDX renderer supports:
 
 - GitHub Flavored Markdown tables and lists via `remark-gfm`
-- Syntax highlighting via `rehype-highlight`
+- Syntax highlighting via Shiki
 - Math with `<InlineMath>` and `<BlockMath>`
+- `<Admonition>`, `<Info>`, `<Note>`, `<Tip>`, `<Warning>`, and `<Danger>`
 - `<PostAndDate>`
 - `<SideBySideImages>`
 - `<SideBySideVideos>`

@@ -1,8 +1,19 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
   turbopack: {
     root: __dirname,
+    rules: {
+      '*.mdx': {
+        condition: {
+          query: /[?&]raw(?=&|$)/,
+        },
+        loaders: [path.resolve(__dirname, 'loaders/mdx-raw-loader.cjs')],
+        as: '*.js',
+      },
+    },
   },
   images: {
     formats: ['image/avif', 'image/webp'],

@@ -1,12 +1,10 @@
 import { notFound } from 'next/navigation';
-import { connection } from 'next/server';
 
 import type { Metadata } from 'next';
 import { getPlaiceholder } from 'plaiceholder';
 
 import { Layout } from '@/base/article/Layout';
 import { MDXServer } from '@/base/components/MDX/MDXServer';
-import { ArticleDevRefresh } from '@/features/articles/components/ArticleDevRefresh';
 import {
   getArticleContent,
   getArticleMetadata,
@@ -26,10 +24,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
-  if (process.env.NODE_ENV === 'development') {
-    await connection();
-  }
-
   if (!hasArticleMetadata(slug)) {
     return {};
   }
@@ -47,10 +41,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-
-  if (process.env.NODE_ENV === 'development') {
-    await connection();
-  }
 
   if (!hasArticleContent(slug) || !hasArticleMetadata(slug)) {
     notFound();
@@ -74,9 +64,6 @@ export default async function Page({ params }: Props) {
       minutes={minutes}
       coverImage={coverImage}
     >
-      {process.env.NODE_ENV === 'development' ? (
-        <ArticleDevRefresh slug={slug} />
-      ) : null}
       <MDXServer source={content} />
     </Layout>
   );
