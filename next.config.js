@@ -19,6 +19,7 @@ module.exports = {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       { protocol: 'https', hostname: 'lastfm.freetls.fastly.net' },
+      { protocol: 'https', hostname: 'i.scdn.co' },
     ],
   },
   async headers() {
