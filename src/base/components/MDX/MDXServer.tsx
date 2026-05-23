@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 
 import { TweetEmbed } from './TweetEmbedClient';
 import { codeBlockMetaTransformer } from './codeBlockMeta';
+import { ArticleImage } from '@/base/article/ArticleImage';
 import {
   Admonition,
   Danger,
@@ -55,6 +56,7 @@ const SafeBlockMath = (props: {
 const components = {
   Admonition,
   Danger,
+  Image: ArticleImage,
   Info,
   Note,
   PostAndDate,

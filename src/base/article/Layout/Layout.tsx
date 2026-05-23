@@ -22,7 +22,7 @@ type LayoutPropTypes = {
   date: string;
   icon?: string;
   alternativeArticle?: ArticleAlternative;
-  coverImage: ArticleCoverImage;
+  coverImage?: ArticleCoverImage;
   minutes: number;
   navigation: ArticleNavigationType;
   tags: string[];

@@ -33,7 +33,7 @@ export type ArticleMetadata = {
   date: string;
   icon?: string;
   tags?: string[];
-  coverImage: ArticleCoverImage;
+  coverImage?: ArticleCoverImage;
   alternativeArticle?: ArticleAlternative;
 };
 
@@ -219,7 +219,10 @@ function parseArticleMetadata(
     date,
     icon: optionalStringValue(value, 'icon'),
     tags: parseTags(value.tags, context),
-    coverImage: parseCoverImage(value.coverImage, context),
+    coverImage:
+      value.coverImage == null
+        ? undefined
+        : parseCoverImage(value.coverImage, context),
     alternativeArticle: parseAlternativeArticle(
       value.alternativeArticle,
       context,

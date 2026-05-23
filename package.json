@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
-    "@fortawesome/free-brands-svg-icons": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.3.1",
     "debounce": "^2.1.0",
@@ -29,14 +28,13 @@
     "framer-motion": "^10.12.16",
     "lightningcss-linux-x64-gnu": "^1.32.0",
     "next": "^16.2.6",
-    "plaiceholder": "2.2.0",
     "react": "^19",
     "react-dom": "^19",
     "react-intersection-observer": "^8.33.1",
     "react-katex": "^3.1.0",
     "reading-time": "^1.5.0",
     "rehype-slug": "^6.0.0",
-    "sharp": "^0.30.5"
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@shikijs/rehype": "^4.1.0",

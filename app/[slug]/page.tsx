@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 
 import type { Metadata } from 'next';
-import { getPlaiceholder } from 'plaiceholder';
 
 import { Layout } from '@/base/article/Layout';
 import { MDXServer } from '@/base/components/MDX/MDXServer';
@@ -79,16 +78,10 @@ export default async function Page({ params }: Props) {
   const { content, minutes } = getArticleContent(slug);
   const articleMetadata = getArticleMetadata(slug);
   const navigation = getArticleNavigation(slug);
-  const { base64, img } = await getPlaiceholder(articleMetadata.coverImage.src);
   const articleUrl = `${SITE_URL}/${slug}`;
   const articleImageUrl = `${SITE_URL}/og/${slug}`;
   const publishedTime = parseArticleDate(articleMetadata.date).toISOString();
 
-  const coverImage = {
-    ...articleMetadata.coverImage,
-    src: img.src,
-    blurDataURL: base64,
-  };
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -120,7 +113,7 @@ export default async function Page({ params }: Props) {
       alternativeArticle={articleMetadata.alternativeArticle}
       minutes={minutes}
       navigation={navigation}
-      coverImage={coverImage}
+      coverImage={articleMetadata.coverImage}
     >
       <script
         type="application/ld+json"

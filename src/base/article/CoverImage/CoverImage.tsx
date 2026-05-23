@@ -25,7 +25,7 @@ export const CoverImage: FC<CoverImagePropTypes> = ({
       height={height}
       alt={alt}
       blurDataURL={blurDataURL}
-      placeholder="blur"
+      placeholder={blurDataURL ? 'blur' : 'empty'}
       className="rounded-md border border-site-border-subtle"
       style={{ height: 'auto' }}
     />
