@@ -13,6 +13,7 @@ import {
   hasArticleMetadata,
   parseArticleDate,
 } from '@/features/articles/lib/articles';
+import { getImageMeta } from '@/lib/image';
 import { AUTHOR_NAME, SITE_NAME, SITE_URL } from '@/lib/site';
 
 type Props = {
@@ -82,6 +83,14 @@ export default async function Page({ params }: Props) {
   const articleImageUrl = `${SITE_URL}/og/${slug}`;
   const publishedTime = parseArticleDate(articleMetadata.date).toISOString();
 
+  const coverImage = articleMetadata.coverImage
+    ? {
+        ...articleMetadata.coverImage,
+        blurDataURL: (await getImageMeta(articleMetadata.coverImage.src))
+          .blurDataURL,
+      }
+    : undefined;
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -113,7 +122,7 @@ export default async function Page({ params }: Props) {
       alternativeArticle={articleMetadata.alternativeArticle}
       minutes={minutes}
       navigation={navigation}
-      coverImage={articleMetadata.coverImage}
+      coverImage={coverImage}
     >
       <script
         type="application/ld+json"
