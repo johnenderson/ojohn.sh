@@ -46,6 +46,22 @@ export type ArticleListItem = {
   tags: string[];
 };
 
+export function parseArticleDate(raw: string): Date {
+  const slashDate = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (slashDate) {
+    const [, day, month, year] = slashDate;
+    return new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+  }
+
+  const dashDate = raw.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+  if (dashDate) {
+    const [, day, month, year] = dashDate;
+    return new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+  }
+
+  return new Date(raw);
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -359,5 +375,8 @@ export function getArticlesList(
         tags: metadata.tags ?? [],
       };
     })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .sort(
+      (a, b) =>
+        parseArticleDate(b.date).getTime() - parseArticleDate(a.date).getTime(),
+    );
 }

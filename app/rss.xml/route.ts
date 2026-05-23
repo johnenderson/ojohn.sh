@@ -3,18 +3,11 @@ import { Feed } from 'feed';
 import {
   getArticleMetadata,
   getArticlePaths,
+  parseArticleDate,
 } from '@/features/articles/lib/articles';
 import { AUTHOR_NAME, SITE_NAME, SITE_URL } from '@/lib/site';
 
 const AUTHOR = { name: AUTHOR_NAME, link: SITE_URL };
-
-function toDate(raw: string): Date {
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(raw)) {
-    const [day, month, year] = raw.split('/');
-    return new Date(`${year}-${month}-${day}`);
-  }
-  return new Date(raw);
-}
 
 export async function GET() {
   const feed = new Feed({
@@ -39,7 +32,11 @@ export async function GET() {
       }
     })
     .filter(Boolean)
-    .sort((a, b) => toDate(b!.date).getTime() - toDate(a!.date).getTime());
+    .sort(
+      (a, b) =>
+        parseArticleDate(b!.date).getTime() -
+        parseArticleDate(a!.date).getTime(),
+    );
 
   for (const article of articles) {
     if (!article) continue;
@@ -48,7 +45,7 @@ export async function GET() {
       id: `${SITE_URL}/${article.slug}`,
       link: `${SITE_URL}/${article.slug}`,
       description: article.description ?? '',
-      date: toDate(article.date),
+      date: parseArticleDate(article.date),
       author: [AUTHOR],
     });
   }

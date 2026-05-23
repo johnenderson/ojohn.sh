@@ -1,7 +1,10 @@
 import { FC } from 'react';
 
 import { AlternativeArticle } from '@/base/article/AlternativeArticle';
-import { ArticleAlternative } from '@/features/articles/lib/articles';
+import {
+  ArticleAlternative,
+  parseArticleDate,
+} from '@/features/articles/lib/articles';
 
 type MetaPropTypes = {
   date: string;
@@ -49,10 +52,20 @@ const ClockIcon = () => (
 function formatDate(raw: string): string {
   // If already DD/MM/YYYY, return as-is
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(raw)) return raw;
+  // If already DD-MM-YYYY, convert to DD/MM/YYYY
+  if (/^\d{2}-\d{2}-\d{4}$/.test(raw)) return raw.replaceAll('-', '/');
   // If YYYY-MM-DD, convert to DD/MM/YYYY
   const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (match) return `${match[3]}/${match[2]}/${match[1]}`;
   return raw;
+}
+
+function formatDateTime(raw: string): string {
+  const date = parseArticleDate(raw);
+
+  return Number.isNaN(date.getTime())
+    ? raw
+    : date.toISOString().slice(0, 'YYYY-MM-DD'.length);
 }
 
 export const Meta: FC<MetaPropTypes> = ({
@@ -67,7 +80,7 @@ export const Meta: FC<MetaPropTypes> = ({
         <span className="flex items-center gap-1.5">
           <CalendarIcon />
           <span>
-            <time dateTime={`${date}T00:00:00.000Z`} itemProp="datePublished">
+            <time dateTime={formatDateTime(date)} itemProp="datePublished">
               {formatDate(date)}
             </time>
           </span>

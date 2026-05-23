@@ -79,9 +79,11 @@ const FadeIn = ({
 );
 
 const TrackArtwork = ({
+  eager = false,
   track,
   size = 64,
 }: {
+  eager?: boolean;
   track: LastfmTrack;
   size?: number;
 }) => {
@@ -104,6 +106,8 @@ const TrackArtwork = ({
       alt={track.album ?? track.name}
       width={size}
       height={size}
+      loading={eager ? 'eager' : 'lazy'}
+      priority={eager}
       className="shrink-0 rounded transition-transform duration-200 group-hover:scale-[1.03] group-focus-within:scale-[1.03]"
       style={{ width: size, height: size }}
       onError={() => setFailed(true)}
@@ -203,7 +207,7 @@ export const LastfmCard = () => {
 
           {!loading && featuredTrack && (
             <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-              <TrackArtwork track={featuredTrack} />
+              <TrackArtwork eager track={featuredTrack} />
               <div className="flex min-w-0 flex-col">
                 <Link
                   href={featuredTrack.url}

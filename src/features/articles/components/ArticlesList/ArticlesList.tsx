@@ -6,6 +6,7 @@ import { Title } from '@/base/components/Title';
 import {
   ArticleListItem as ArticleListItemType,
   getArticlesList,
+  parseArticleDate,
 } from '@/features/articles/lib/articles';
 
 type Header = 'h1' | 'h2' | false;
@@ -17,9 +18,7 @@ type ArticlesListProps = {
 };
 
 const getArticleYear = (date: string) => {
-  const [, , year] = date.split('/');
-
-  return year ?? new Date(date).getFullYear().toString();
+  return parseArticleDate(date).getUTCFullYear().toString();
 };
 
 const groupArticlesByYear = (articles: ArticleListItemType[]) =>

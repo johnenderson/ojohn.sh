@@ -1,13 +1,16 @@
 import type { MetadataRoute } from 'next';
 
-import { getArticlesList } from '@/features/articles/lib/articles';
+import {
+  getArticlesList,
+  parseArticleDate,
+} from '@/features/articles/lib/articles';
 import { SITE_URL } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const articles = getArticlesList().map((article) => ({
     url: `${SITE_URL}/${article.slug}`,
-    lastModified: new Date(article.date),
+    lastModified: parseArticleDate(article.date),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
