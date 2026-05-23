@@ -13,3 +13,12 @@ export type LastfmStats = {
   lastPlayed: LastfmTrack | null;
   tracks: LastfmTrack[];
 };
+
+export type LastfmArtist = {
+  name: string;
+  url: string;
+  imageUrl: string | null;
+  imageSource: 'spotify' | null;
+  spotifyUrl: string | null;
+  playcount: number;
+};

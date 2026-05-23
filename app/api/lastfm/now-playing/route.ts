@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { getLastfmNowPlaying } from '@/lib/lastfm';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 30;
 
 export async function GET() {
   try {
@@ -12,7 +12,7 @@ export async function GET() {
       { nowPlaying },
       {
         headers: {
-          'Cache-Control': 'no-store',
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
         },
       },
     );
@@ -23,7 +23,7 @@ export async function GET() {
       { nowPlaying: null },
       {
         headers: {
-          'Cache-Control': 'no-store',
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
         },
         status: 200,
       },

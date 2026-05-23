@@ -4,7 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { faNewspaper, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHeadphones,
+  faNewspaper,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { LanguageSelector } from './LanguageSelector';
@@ -13,6 +17,7 @@ import { SITE_NAME } from '@/lib/site';
 
 const navLinks = [
   { href: '/writings', label: 'Blog', icon: faNewspaper },
+  { href: '/now', label: 'Agora', icon: faHeadphones },
   { href: '/me', label: 'Sobre mim', icon: faUser },
 ];
 

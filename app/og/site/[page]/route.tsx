@@ -26,6 +26,12 @@ const pages = {
     description: 'Trabalho, vida e o que existe entre uma coisa e outra.',
     badge: SITE_NAME,
   },
+  now: {
+    eyebrow: 'Agora',
+    title: 'Ouvindo',
+    description: 'Sou um músico enferrujado, que continua amando a música.',
+    badge: 'Last.fm',
+  },
 } as const;
 
 export async function GET(
