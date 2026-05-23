@@ -43,6 +43,13 @@ const DiscIcon = () => (
   </svg>
 );
 
+const LiveBadge = () => (
+  <span className="inline-flex items-center gap-1.5 rounded-full border border-site-border bg-site-primary-soft px-2 py-0.5 text-xs font-semibold leading-5 text-site-primary-hover">
+    <span className="h-1.5 w-1.5 rounded-full bg-site-primary-hover motion-safe:animate-pulse" />
+    ao vivo
+  </span>
+);
+
 const FadeIn = ({
   children,
   className,
@@ -101,7 +108,7 @@ const TrackArtwork = ({
 };
 
 const TrackRow = ({ track }: { track: LastfmTrack }) => (
-  <li className="flex min-w-0 items-center gap-3">
+  <li className="flex min-w-0 items-center gap-3 rounded p-1 transition-colors hover:bg-site-card-hover">
     <TrackArtwork track={track} size={40} />
     <div className="flex min-w-0 flex-col">
       <Link
@@ -150,17 +157,20 @@ export const LastfmCard = () => {
   const title = lastfm?.nowPlaying ? 'Ouvindo agora' : 'Última música';
 
   return (
-    <section id="activity" className="mt-10">
+    <section id="activity" className="mt-12 md:mt-14">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <FadeIn
-          className="col-span-1 flex min-h-36 flex-col gap-3 rounded-md border border-site-border bg-site-card p-5 md:col-span-2"
+          className="col-span-1 flex min-h-36 flex-col gap-4 rounded-md border border-site-border bg-site-card p-4 transition duration-200 hover:-translate-y-0.5 hover:border-site-primary hover:bg-site-card-hover sm:p-5 md:col-span-2"
           duration={500}
         >
-          <div className="flex items-center gap-2">
-            <h2 className="m-0 text-base font-semibold text-site-foreground">
-              {title}
-            </h2>
-            <DiscIcon />
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <h2 className="m-0 text-base font-semibold text-site-foreground">
+                {title}
+              </h2>
+              <DiscIcon />
+            </div>
+            {lastfm?.nowPlaying && <LiveBadge />}
           </div>
 
           {loading && (
@@ -168,7 +178,7 @@ export const LastfmCard = () => {
           )}
 
           {!loading && featuredTrack && (
-            <div className="flex min-w-0 gap-4">
+            <div className="flex min-w-0 items-start gap-3 sm:gap-4">
               <TrackArtwork track={featuredTrack} />
               <div className="flex min-w-0 flex-col">
                 <Link
@@ -197,10 +207,21 @@ export const LastfmCard = () => {
               Nenhuma música recente encontrada.
             </p>
           )}
+
+          {featuredTrack && (
+            <Link
+              href={featuredTrack.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto w-fit text-xs font-medium text-site-body-muted no-underline transition-colors hover:text-site-primary-hover"
+            >
+              Ver no Last.fm
+            </Link>
+          )}
         </FadeIn>
 
         <FadeIn
-          className="col-span-1 flex min-h-36 flex-col gap-3 rounded-md border border-site-border bg-site-card p-5 md:col-span-2"
+          className="col-span-1 flex min-h-36 flex-col gap-4 rounded-md border border-site-border bg-site-card p-4 transition duration-200 hover:-translate-y-0.5 hover:border-site-primary hover:bg-site-card-hover sm:p-5 md:col-span-2"
           delay={100}
           duration={500}
         >
@@ -224,8 +245,13 @@ export const LastfmCard = () => {
 
           {!loading && lastfm && lastfm.tracks.length > 0 && (
             <ul className="m-0 flex list-none flex-col gap-3 p-0">
-              {lastfm.tracks.slice(0, 4).map((track) => (
-                <TrackRow key={`${track.name}-${track.artist}`} track={track} />
+              {lastfm.tracks.slice(0, 4).map((track, index) => (
+                <TrackRow
+                  key={`${track.name}-${track.artist}-${
+                    track.playedAt ?? track.url
+                  }-${index}`}
+                  track={track}
+                />
               ))}
             </ul>
           )}

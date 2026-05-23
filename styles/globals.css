@@ -771,10 +771,16 @@ p.no-margin-top {
   font-size: var(--prose-font-size, 17px);
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  padding-top: calc(5rem + 2rem); /* fixed navbar height + spacing */
+  padding-top: calc(4rem + 1.75rem); /* fixed navbar height + spacing */
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding-top: calc(5rem + 2.75rem);
+  }
 }
 
 @media (min-width: 1024px) {

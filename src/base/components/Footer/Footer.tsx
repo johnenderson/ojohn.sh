@@ -2,6 +2,8 @@
 
 import { FC, useEffect, useState } from 'react';
 
+import { AUTHOR_NAME, SITE_NAME } from '@/lib/site';
+
 const ELEVATOR_SPEED_KEY = 'elevator_speed';
 const NORMAL_SCROLL_SPEED = 600;
 const FAST_SCROLL_SPEED = 1000;
@@ -80,7 +82,9 @@ export const Footer: FC = () => (
   <>
     <footer className="mt-12 mb-6 border-t border-site-border pt-6 text-center md:text-left mx-auto max-w-5xl px-6 lg:px-0">
       <div className="flex flex-col items-center md:items-start text-sm text-site-body-muted">
-        <p className="m-0">&copy; {new Date().getFullYear()} John Enderson</p>
+        <p className="m-0">
+          &copy; {new Date().getFullYear()} {AUTHOR_NAME} · {SITE_NAME}
+        </p>
         <p className="m-0 text-site-body-muted">
           Website licenciado sob a MIT.
         </p>

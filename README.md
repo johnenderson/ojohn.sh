@@ -1,4 +1,4 @@
-# johnenderson.dev
+# ojohn.sh
 
 Personal website with a home page, long-form articles, RSS feed, theme
 preferences, and reading controls.
@@ -13,13 +13,13 @@ preferences, and reading controls.
 
 ## Routes
 
-| Route | Description |
-|---|---|
-| `/` | Home page |
-| `/writings` | Article index |
-| `/me` | About page |
-| `/rss.xml` | RSS feed |
-| `/[slug]` | Article page generated from `content/<slug>/en` |
+| Route       | Description                                     |
+| ----------- | ----------------------------------------------- |
+| `/`         | Home page                                       |
+| `/writings` | Article index                                   |
+| `/me`       | About page                                      |
+| `/rss.xml`  | RSS feed                                        |
+| `/[slug]`   | Article page generated from `content/<slug>/en` |
 
 ## Development
 

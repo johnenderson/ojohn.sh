@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 
 import { DevPerformanceMeasurePatch } from './components/DevPerformanceMeasurePatch';
 import { Providers } from './providers';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 // Prevent FontAwesome from adding its CSS dynamically on the server (causes SSR errors)
 config.autoAddCss = false;
@@ -25,10 +26,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://johnenderson.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'johnenderson.com',
-    template: '%s | johnenderson.com',
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
   description: 'Site pessoal — artigos, notas e experimentos.',
   icons: {
@@ -41,8 +42,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://johnenderson.com',
-    siteName: 'johnenderson.com',
+    url: SITE_URL,
+    siteName: SITE_NAME,
   },
   twitter: {
     card: 'summary_large_image',

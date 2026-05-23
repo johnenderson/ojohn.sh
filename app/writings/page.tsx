@@ -3,12 +3,13 @@ import type { Metadata } from 'next';
 
 import { PageTitle } from '@/base/components/PageTitle';
 import { ArticlesList } from '@/features/articles/components/ArticlesList';
+import { DEFAULT_OG_IMAGE } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Artigos',
   description: 'Artigos por John Enderson',
   openGraph: {
-    images: [{ url: 'https://johnenderson.com/logo.jpeg' }],
+    images: [{ url: DEFAULT_OG_IMAGE }],
   },
 };
 

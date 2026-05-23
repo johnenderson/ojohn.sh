@@ -5,7 +5,7 @@ import { Divider } from '@/base/components/Divider';
 import { SocialIcons } from '@/base/components/SocialIcons';
 
 export const About: FC = () => (
-  <section id="about" className="flex flex-col gap-4">
+  <section id="about" className="mt-5 flex flex-col gap-4">
     <div>
       <p className="no-margin-top text-site-foreground">
         Desenvolvedor backend

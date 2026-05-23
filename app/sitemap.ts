@@ -1,8 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { getArticlesList } from '@/features/articles/lib/articles';
-
-const SITE_URL = 'https://johnenderson.com';
+import { SITE_URL } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

@@ -4,9 +4,9 @@ import {
   getArticleMetadata,
   getArticlePaths,
 } from '@/features/articles/lib/articles';
+import { AUTHOR_NAME, SITE_NAME, SITE_URL } from '@/lib/site';
 
-const SITE_URL = 'https://johnenderson.com';
-const AUTHOR = { name: 'John Enderson', link: SITE_URL };
+const AUTHOR = { name: AUTHOR_NAME, link: SITE_URL };
 
 function toDate(raw: string): Date {
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(raw)) {
@@ -18,13 +18,13 @@ function toDate(raw: string): Date {
 
 export async function GET() {
   const feed = new Feed({
-    title: 'johnenderson.com',
+    title: SITE_NAME,
     description: 'Artigos sobre ML, carreira e tecnologia.',
     id: SITE_URL,
     link: SITE_URL,
     language: 'pt-BR',
     feedLinks: { rss: `${SITE_URL}/rss.xml` },
-    copyright: `© ${new Date().getFullYear()} John Enderson`,
+    copyright: `© ${new Date().getFullYear()} ${AUTHOR_NAME}`,
     author: AUTHOR,
   });
 

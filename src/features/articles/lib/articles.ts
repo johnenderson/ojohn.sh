@@ -39,6 +39,9 @@ export type ArticleListItem = {
   slug: string;
   title: string;
   date: string;
+  description: string;
+  minutes: number;
+  tags: string[];
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -340,12 +343,16 @@ export function getArticlesList(
   return getArticleSlugs(locale)
     .filter((slug) => hasArticleMetadata(slug, locale))
     .map((slug) => {
-      const metadata = getArticleMetadata(slug, locale);
+      const { content, metadata } = readArticleFile(slug, locale);
+      const { minutes } = readingTime(content);
 
       return {
         slug,
         title: metadata.title,
         date: metadata.date,
+        description: metadata.description,
+        minutes: Math.max(1, Math.round(minutes)),
+        tags: metadata.tags ?? [],
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
