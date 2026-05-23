@@ -1,13 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { faNewspaper, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faNewspaper,
-  faUser,
-} from '@fortawesome/free-solid-svg-icons';
 
 import { LanguageSelector } from './LanguageSelector';
 import { PreferencesPanel } from './PreferencesPanel';
@@ -55,7 +53,9 @@ export const Navbar = () => {
   return (
     <>
       <header
-        className={`navbar fixed top-0 left-0 z-40 h-16 w-full px-6 transition-colors duration-300 md:h-20 lg:px-0${scrolled ? ' scrolled' : ''}`}
+        className={`navbar fixed top-0 left-0 z-40 h-16 w-full px-6 transition-colors duration-300 md:h-20 lg:px-0${
+          scrolled ? ' scrolled' : ''
+        }`}
       >
         <div className="mx-auto flex size-full max-w-5xl items-center">
           <Link

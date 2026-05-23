@@ -1,16 +1,16 @@
 import Link from 'next/link';
-import type { Metadata } from 'next';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { PageWrapper } from '../components/PageWrapper';
 import {
   faCakeCandles,
   faCode,
   faGraduationCap,
   faHandshake,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import type { Metadata } from 'next';
 
 import { PageTitle } from '@/base/components/PageTitle';
-
-import { PageWrapper } from '../components/PageWrapper';
 
 export const metadata: Metadata = {
   title: 'Sobre mim',

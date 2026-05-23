@@ -1,1 +1,3 @@
 *.min.css
+.next
+next-env.d.ts

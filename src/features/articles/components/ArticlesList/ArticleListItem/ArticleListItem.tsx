@@ -5,7 +5,11 @@ import { itemStyle } from './style';
 
 type PostPropType = { datetime: string; link: string; title: string };
 
-export const ArticleListItem: FC<PostPropType> = ({ datetime, link, title }) => (
+export const ArticleListItem: FC<PostPropType> = ({
+  datetime,
+  link,
+  title,
+}) => (
   <li style={itemStyle}>
     <div className="block min-w-[120px] mr-4 shrink-0 text-[0.95rem] leading-7 text-[#aaa] light:text-[#666]">
       <time>{datetime}</time>

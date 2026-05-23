@@ -17,7 +17,10 @@ export default function Page() {
     <PageWrapper>
       <main id="main">
         <div className="content">
-          <PageTitle title="Artigos" subtitle="Guias, notas e textos pessoais." />
+          <PageTitle
+            title="Artigos"
+            subtitle="Guias, notas e textos pessoais."
+          />
           <ArticlesList header={false} />
         </div>
       </main>

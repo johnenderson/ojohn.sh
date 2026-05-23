@@ -1,5 +1,5 @@
-import { FC } from 'react';
 import Link from 'next/link';
+import { FC } from 'react';
 
 import { Divider } from '@/base/components/Divider';
 import { SocialIcons } from '@/base/components/SocialIcons';
@@ -11,7 +11,8 @@ export const About: FC = () => (
         Desenvolvedor backend
       </p>
       <p className="no-margin max-w-2xl text-site-body">
-        Crio coisas com Java e Spring Boot, subo infraestrutura com Terraform e AWS.
+        Crio coisas com Java e Spring Boot, subo infraestrutura com Terraform e
+        AWS.
         <br />
         Atualmente trabalho no{' '}
         <Link

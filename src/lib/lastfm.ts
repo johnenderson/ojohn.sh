@@ -87,8 +87,9 @@ export async function getLastfmStats(): Promise<LastfmStats> {
 
   const data = (await response.json()) as LastfmApiResponse;
   const rawTracks = data.recenttracks?.track;
-  const tracks = (Array.isArray(rawTracks) ? rawTracks : rawTracks ? [rawTracks] : [])
-    .map(mapTrack);
+  const tracks = (
+    Array.isArray(rawTracks) ? rawTracks : rawTracks ? [rawTracks] : []
+  ).map(mapTrack);
 
   const nowPlaying = tracks.find((track) => track.nowPlaying) ?? null;
   const lastPlayed = tracks.find((track) => !track.nowPlaying) ?? null;

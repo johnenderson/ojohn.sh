@@ -13,9 +13,7 @@ export function PageWrapper({ children }: PageWrapperProps) {
   return (
     <>
       <Navbar />
-      <AnimationLayout>
-        {children}
-      </AnimationLayout>
+      <AnimationLayout>{children}</AnimationLayout>
     </>
   );
 }

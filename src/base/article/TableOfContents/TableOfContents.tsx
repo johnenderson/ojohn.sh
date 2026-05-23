@@ -55,12 +55,11 @@ export const TableOfContents = () => {
   const activeIdx = headings.findIndex((h) => h.id === activeId);
 
   return (
-    <aside className="sticky hidden h-fit w-full max-w-[19rem] shrink-0 flex-col gap-3 border-l border-site-border lg:flex text-lg"
+    <aside
+      className="sticky hidden h-fit w-full max-w-[19rem] shrink-0 flex-col gap-3 border-l border-site-border lg:flex text-lg"
       style={{ top: '8rem' }}
     >
-      <p className="ml-6 font-semibold text-site-foreground">
-        Nesse artigo
-      </p>
+      <p className="ml-6 font-semibold text-site-foreground">Nesse artigo</p>
       <div className="relative flex flex-col gap-1.5">
         {headings.map((heading) => (
           <a
@@ -71,7 +70,10 @@ export const TableOfContents = () => {
               const el = document.getElementById(heading.id);
               if (el) {
                 const top =
-                  el.getBoundingClientRect().top + window.scrollY - NAVBAR_OFFSET - 24;
+                  el.getBoundingClientRect().top +
+                  window.scrollY -
+                  NAVBAR_OFFSET -
+                  24;
                 window.scrollTo({ top, behavior: 'smooth' });
               }
               setActiveId(heading.id);
