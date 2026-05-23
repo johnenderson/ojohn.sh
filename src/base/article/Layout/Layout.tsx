@@ -3,8 +3,10 @@ import { FC, PropsWithChildren } from 'react';
 import { ArticleNavigation } from '@/base/article/ArticleNavigation';
 import { CodeCopyButtons } from '@/base/article/CodeCopyButtons';
 import { CoverImage } from '@/base/article/CoverImage';
+import { HeadingAnchors } from '@/base/article/HeadingAnchors';
 import { Footer } from '@/base/article/Layout/Footer';
 import { Meta } from '@/base/article/Meta';
+import { ReadingProgress } from '@/base/article/ReadingProgress';
 import { TableOfContents } from '@/base/article/TableOfContents/TableOfContents';
 import { Title } from '@/base/article/Title';
 import { AnimationLayout } from '@/base/components/Layout/AnimationLayout';
@@ -38,6 +40,7 @@ export const Layout: FC<PropsWithChildren<LayoutPropTypes>> = ({
   tags,
 }) => (
   <>
+    <ReadingProgress />
     <Navbar />
     <AnimationLayout>
       <div className="content article-content">
@@ -83,6 +86,7 @@ export const Layout: FC<PropsWithChildren<LayoutPropTypes>> = ({
 
                 {children}
                 <CodeCopyButtons />
+                <HeadingAnchors />
                 <ArticleNavigation navigation={navigation} />
               </article>
 

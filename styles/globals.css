@@ -175,6 +175,17 @@ html.light {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .interactive-card {
   box-shadow: 0 0 0 transparent;
   transition: background-color 180ms ease, border-color 180ms ease,
@@ -498,6 +509,46 @@ article h4 {
 
 html.light article h4 {
   color: var(--site-foreground);
+}
+
+.heading-anchor {
+  align-items: center;
+  color: var(--site-body-muted);
+  display: inline-flex;
+  margin-left: 0.4rem;
+  opacity: 0;
+  transition: color 150ms ease, opacity 150ms ease;
+  vertical-align: middle;
+}
+
+article h2:hover .heading-anchor,
+article h3:hover .heading-anchor,
+.heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.heading-anchor:hover,
+.heading-anchor:focus-visible {
+  color: var(--site-primary-hover);
+  outline: none;
+}
+
+.reading-progress {
+  height: 3px;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.reading-progress-bar {
+  background: var(--site-primary);
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  width: 100%;
 }
 
 article.post > p,

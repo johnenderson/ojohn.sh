@@ -76,7 +76,13 @@ export const TableOfContents = ({
             window.scrollY -
             NAVBAR_OFFSET -
             24;
-          window.scrollTo({ top, behavior: 'smooth' });
+          const prefersReducedMotion = window.matchMedia(
+            '(prefers-reduced-motion: reduce)',
+          ).matches;
+          window.scrollTo({
+            top,
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          });
         }
         setActiveId(heading.id);
       }}
