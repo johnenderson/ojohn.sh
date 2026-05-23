@@ -7,15 +7,32 @@ import { About } from '@/features/home/components/About';
 import { LastfmCard } from '@/features/home/components/Activity';
 import { Hero } from '@/features/home/components/Hero';
 import { SkipLink } from '@/features/home/components/SkipLink';
-import { DEFAULT_OG_IMAGE, SITE_NAME } from '@/lib/site';
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/site';
+
+const HOME_TITLE = 'John Enderson - O John Backend Developer';
+const HOME_DESCRIPTION = 'Site pessoal — artigos, notas e experimentos.';
 
 export const metadata: Metadata = {
   title: {
-    absolute: SITE_NAME,
+    absolute: HOME_TITLE,
   },
-  description: 'Site pessoal — artigos, notas e experimentos.',
+  description: HOME_DESCRIPTION,
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     images: [{ url: DEFAULT_OG_IMAGE }],
+    siteName: SITE_NAME,
+    type: 'website',
+    url: SITE_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

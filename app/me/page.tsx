@@ -11,10 +11,32 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Metadata } from 'next';
 
 import { PageTitle } from '@/base/components/PageTitle';
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/site';
+
+const ABOUT_TITLE = 'Sobre mim';
+const ABOUT_DESCRIPTION = 'Sobre John Enderson';
+const ABOUT_URL = `${SITE_URL}/me`;
 
 export const metadata: Metadata = {
-  title: 'Sobre mim',
-  description: 'Sobre John Enderson',
+  title: ABOUT_TITLE,
+  description: ABOUT_DESCRIPTION,
+  alternates: {
+    canonical: ABOUT_URL,
+  },
+  openGraph: {
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+    images: [{ url: DEFAULT_OG_IMAGE }],
+    siteName: SITE_NAME,
+    type: 'profile',
+    url: ABOUT_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 const tldrCards = [

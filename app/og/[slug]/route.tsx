@@ -1,0 +1,133 @@
+import { ImageResponse } from 'next/og';
+
+import {
+  getArticleMetadata,
+  hasArticleMetadata,
+} from '@/features/articles/lib/articles';
+import { SITE_NAME } from '@/lib/site';
+
+const size = {
+  width: 1200,
+  height: 630,
+};
+
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ slug: string }> },
+) {
+  const { slug } = await params;
+
+  if (!hasArticleMetadata(slug)) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  const article = getArticleMetadata(slug);
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '72px',
+          color: '#fffaf5',
+          background:
+            'radial-gradient(circle at 15% 10%, rgba(91, 211, 199, 0.28), transparent 32%), radial-gradient(circle at 85% 12%, rgba(240, 166, 109, 0.18), transparent 28%), #09080d',
+          fontFamily: 'Arial, sans-serif',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '24px',
+          }}
+        >
+          <div
+            style={{
+              width: '76px',
+              height: '76px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid rgba(91, 211, 199, 0.55)',
+              borderRadius: '999px',
+              background: 'rgba(91, 211, 199, 0.14)',
+              color: '#5bd3c7',
+              fontSize: '40px',
+              lineHeight: 1,
+            }}
+          >
+            {article.icon ?? '✦'}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '6px',
+            }}
+          >
+            <div
+              style={{
+                color: 'rgba(255, 250, 245, 0.72)',
+                fontSize: '28px',
+                fontWeight: 700,
+              }}
+            >
+              {SITE_NAME}
+            </div>
+            <div
+              style={{
+                color: '#5bd3c7',
+                fontSize: '20px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Blog
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '26px',
+          }}
+        >
+          <h1
+            style={{
+              maxWidth: '980px',
+              margin: 0,
+              color: '#fffaf5',
+              fontSize: article.title.length > 56 ? '60px' : '72px',
+              fontWeight: 800,
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {article.title}
+          </h1>
+          <p
+            style={{
+              maxWidth: '940px',
+              margin: 0,
+              color: 'rgba(255, 250, 245, 0.72)',
+              fontSize: '30px',
+              fontWeight: 600,
+              lineHeight: 1.35,
+            }}
+          >
+            {article.description}
+          </p>
+        </div>
+      </div>
+    ),
+    size,
+  );
+}

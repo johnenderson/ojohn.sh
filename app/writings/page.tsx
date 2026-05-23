@@ -3,13 +3,31 @@ import type { Metadata } from 'next';
 
 import { PageTitle } from '@/base/components/PageTitle';
 import { ArticlesList } from '@/features/articles/components/ArticlesList';
-import { DEFAULT_OG_IMAGE } from '@/lib/site';
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/site';
+
+const BLOG_TITLE = 'Blog';
+const BLOG_DESCRIPTION = 'Guias, notas e textos pessoais por John Enderson';
+const BLOG_URL = `${SITE_URL}/writings`;
 
 export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Guias, notas e textos pessoais por John Enderson',
+  title: BLOG_TITLE,
+  description: BLOG_DESCRIPTION,
+  alternates: {
+    canonical: BLOG_URL,
+  },
   openGraph: {
+    title: BLOG_TITLE,
+    description: BLOG_DESCRIPTION,
     images: [{ url: DEFAULT_OG_IMAGE }],
+    siteName: SITE_NAME,
+    type: 'website',
+    url: BLOG_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: BLOG_TITLE,
+    description: BLOG_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

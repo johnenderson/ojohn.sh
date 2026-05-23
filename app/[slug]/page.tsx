@@ -11,8 +11,9 @@ import {
   getArticlePaths,
   hasArticleContent,
   hasArticleMetadata,
+  parseArticleDate,
 } from '@/features/articles/lib/articles';
-import { SITE_NAME, SITE_URL } from '@/lib/site';
+import { AUTHOR_NAME, SITE_NAME, SITE_URL } from '@/lib/site';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -31,6 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const articleMetadata = getArticleMetadata(slug);
   const articleUrl = `${SITE_URL}/${slug}`;
+  const articleImageUrl = `${SITE_URL}/og/${slug}`;
+  const publishedTime = parseArticleDate(articleMetadata.date).toISOString();
 
   return {
     title: articleMetadata.title,
@@ -41,8 +44,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: articleMetadata.title,
       description: articleMetadata.description,
-      images: [{ url: articleMetadata.coverImage.src }],
+      authors: [AUTHOR_NAME],
+      images: [
+        {
+          url: articleImageUrl,
+          width: 1200,
+          height: 630,
+          alt: articleMetadata.title,
+        },
+      ],
+      publishedTime,
       siteName: SITE_NAME,
+      tags: articleMetadata.tags,
       type: 'article',
       url: articleUrl,
     },
@@ -50,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: articleMetadata.title,
       description: articleMetadata.description,
-      images: [articleMetadata.coverImage.src],
+      images: [articleImageUrl],
     },
   };
 }
@@ -65,11 +78,35 @@ export default async function Page({ params }: Props) {
   const { content, minutes } = getArticleContent(slug);
   const articleMetadata = getArticleMetadata(slug);
   const { base64, img } = await getPlaiceholder(articleMetadata.coverImage.src);
+  const articleUrl = `${SITE_URL}/${slug}`;
+  const articleImageUrl = `${SITE_URL}/og/${slug}`;
+  const publishedTime = parseArticleDate(articleMetadata.date).toISOString();
 
   const coverImage = {
     ...articleMetadata.coverImage,
     src: img.src,
     blurDataURL: base64,
+  };
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    author: {
+      '@type': 'Person',
+      name: AUTHOR_NAME,
+      url: SITE_URL,
+    },
+    datePublished: publishedTime,
+    description: articleMetadata.description,
+    headline: articleMetadata.title,
+    image: articleImageUrl,
+    inLanguage: 'pt-BR',
+    mainEntityOfPage: articleUrl,
+    publisher: {
+      '@type': 'Person',
+      name: AUTHOR_NAME,
+      url: SITE_URL,
+    },
+    url: articleUrl,
   };
 
   return (
@@ -82,6 +119,10 @@ export default async function Page({ params }: Props) {
       minutes={minutes}
       coverImage={coverImage}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <MDXServer source={content} />
     </Layout>
   );
