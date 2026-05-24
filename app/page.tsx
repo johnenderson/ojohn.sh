@@ -5,6 +5,7 @@ import { Navbar } from '@/base/components/Navbar';
 import { ArticlesList } from '@/features/articles/components/ArticlesList';
 import { About } from '@/features/home/components/About';
 import { LastfmCard } from '@/features/home/components/Activity';
+import { DevPulse } from '@/features/home/components/DevPulse';
 import { Hero } from '@/features/home/components/Hero';
 import { SkipLink } from '@/features/home/components/SkipLink';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
@@ -47,6 +48,7 @@ export default function Page() {
           <div className="content">
             <Hero />
             <About />
+            <DevPulse />
             <LastfmCard />
             <ArticlesList />
           </div>
