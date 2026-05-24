@@ -1,19 +1,26 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 import { PageWrapper } from '../components/PageWrapper';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Metadata } from 'next';
 
+import { PageTitle } from '@/base/components/PageTitle';
 import { getLastfmRecentStats, getLastfmTopArtists } from '@/lib/lastfm';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { LastfmArtist, LastfmTrack } from '@/types/Lastfm';
 
-const NOW_TITLE = 'Agora';
-const NOW_DESCRIPTION =
+const NOW_TITLE = 'Fazendo agora';
+const NOW_DESCRIPTION = 'O que tenho feito, ouvido e jogado ultimamente.';
+const LISTENING_DESCRIPTION =
   'Sou um músico enferrujado, que continua amando a música.';
+const PLAYING_DESCRIPTION =
+  'Em alguns períodos posso ficar viciado em alguns jogos; no momento provavelmente você vai me ver jogando LOL para passar tempo.';
+const STEAM_PROFILE_URL =
+  'https://steamcommunity.com/profiles/76561198796212584/';
 const NOW_URL = `${SITE_URL}/now`;
 const NOW_OG_IMAGE = `${SITE_URL}/og/site/now`;
 
@@ -56,6 +63,12 @@ const HeadphonesIcon = () => (
     <path d="M3 14v4a2 2 0 0 0 2 2h2v-8H5a2 2 0 0 0-2 2Z" />
     <path d="M21 14v4a2 2 0 0 1-2 2h-2v-8h2a2 2 0 0 1 2 2Z" />
   </svg>
+);
+
+const SectionIcon = ({ children }: { children: ReactNode }) => (
+  <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-site-primary bg-site-primary-soft text-site-primary lg:size-12">
+    {children}
+  </span>
 );
 
 const MusicFallback = ({ label }: { label: string }) => (
@@ -128,6 +141,7 @@ const ArtistCard = ({ artist }: { artist: LastfmArtist }) => (
     target="_blank"
     rel="noopener noreferrer"
     aria-label={`${artist.name}, ${artist.playcount} plays na semana`}
+    title={`${artist.name} - ${artist.playcount} plays na semana`}
     className="interactive-card group relative block overflow-visible rounded-md border border-site-border-muted bg-site-card no-underline transition-colors hover:z-20 hover:border-site-primary focus-visible:z-20"
   >
     <div className="relative aspect-square overflow-hidden rounded-md bg-site-card-hover">
@@ -143,7 +157,7 @@ const ArtistCard = ({ artist }: { artist: LastfmArtist }) => (
         <MusicFallback label={artist.name} />
       )}
     </div>
-    <span className="pointer-events-none absolute left-3 top-full z-30 mt-2 min-w-24 max-w-[calc(100%-1.5rem)] rounded border border-site-border bg-[#0b0910] px-2.5 py-2 text-left opacity-0 shadow-lg shadow-black/40 transition duration-200 group-hover:translate-y-0.5 group-hover:opacity-100 group-focus-visible:translate-y-0.5 group-focus-visible:opacity-100">
+    <span className="pointer-events-none absolute left-3 top-full z-30 mt-2 min-w-24 max-w-[calc(100%-1.5rem)] rounded border border-site-border bg-[#0b0910] px-2.5 py-2 text-left opacity-0 shadow-lg shadow-black/40 transition duration-200 group-hover:translate-y-0.5 group-hover:opacity-100 group-focus-visible:translate-y-0.5 group-focus-visible:opacity-100 group-active:translate-y-0.5 group-active:opacity-100">
       <span className="block truncate text-xs font-bold leading-4 text-site-foreground">
         {artist.name}
       </span>
@@ -188,97 +202,144 @@ export default async function NowPage() {
     <PageWrapper>
       <main id="main">
         <div className="content">
-          <header className="mb-14 flex max-w-3xl items-start gap-4">
-            <span className="flex size-14 shrink-0 items-center justify-center rounded-md border border-site-primary bg-site-primary-soft text-site-primary">
-              <HeadphonesIcon />
-            </span>
-            <div>
-              <h1 className="m-0 text-4xl font-bold leading-none text-site-foreground sm:text-5xl">
-                Ouvindo
-              </h1>
-              <p className="mb-0 mt-3 text-lg font-semibold leading-snug text-site-body-muted">
-                {NOW_DESCRIPTION}
-              </p>
-            </div>
-          </header>
+          <PageTitle title="Fazendo agora" subtitle={NOW_DESCRIPTION} />
 
-          <div className="grid gap-12 lg:grid-cols-[1fr_28rem]">
-            <section aria-labelledby="recent-tracks-title">
-              <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+          <section
+            aria-labelledby="listening-title"
+            className="border-b border-site-border-subtle pb-16"
+          >
+            <header className="mb-10 flex max-w-3xl items-start gap-3 lg:gap-6 xl:-ml-[4.5rem]">
+              <SectionIcon>
+                <HeadphonesIcon />
+              </SectionIcon>
+              <div>
                 <h2
-                  id="recent-tracks-title"
-                  className="m-0 text-2xl font-bold text-site-foreground sm:text-3xl"
+                  id="listening-title"
+                  className="m-0 text-3xl font-bold leading-none text-site-foreground sm:text-4xl"
                 >
-                  Tocado recentemente
+                  Ouvindo
                 </h2>
-              </div>
-              {recentTracks.length > 0 ? (
-                <ul className="m-0 flex max-w-lg list-none flex-col gap-2 p-0">
-                  {recentTracks.slice(0, 8).map((track, index) => (
-                    <RecentTrack
-                      key={`${track.name}-${track.artist}-${
-                        track.playedAt ?? track.url
-                      }-${index}`}
-                      track={track}
-                      priority={index === 0}
-                    />
-                  ))}
-                </ul>
-              ) : (
-                <p className="m-0 text-site-body-muted">
-                  Sem músicas recentes para mostrar.
+                <p className="mb-0 mt-3 text-base font-semibold leading-snug text-site-body-muted">
+                  {LISTENING_DESCRIPTION}
                 </p>
-              )}
-            </section>
-
-            <section aria-labelledby="top-artists-title">
-              <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-                <h2
-                  id="top-artists-title"
-                  className="m-0 text-2xl font-bold text-site-foreground sm:text-3xl"
-                >
-                  Artistas da semana
-                </h2>
               </div>
-              {artists.length > 0 ? (
-                <>
-                  <div className="grid grid-cols-3 gap-3">
-                    {artists.slice(0, 9).map((artist) => (
-                      <ArtistCard key={artist.name} artist={artist} />
+            </header>
+
+            <div className="grid gap-12 lg:grid-cols-[1fr_28rem]">
+              <section aria-labelledby="recent-tracks-title">
+                <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                  <h2
+                    id="recent-tracks-title"
+                    className="m-0 text-xl font-bold text-site-foreground sm:text-2xl"
+                  >
+                    Tocado recentemente
+                  </h2>
+                </div>
+                {recentTracks.length > 0 ? (
+                  <ul className="m-0 flex max-w-lg list-none flex-col gap-2 p-0">
+                    {recentTracks.slice(0, 8).map((track, index) => (
+                      <RecentTrack
+                        key={`${track.name}-${track.artist}-${
+                          track.playedAt ?? track.url
+                        }-${index}`}
+                        track={track}
+                        priority={index === 0}
+                      />
                     ))}
-                  </div>
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                    <p className="m-0 inline-flex items-center gap-1.5 text-xs font-medium text-site-body-muted">
-                      Imagens dos artistas via
-                      <FontAwesomeIcon
-                        icon={faSpotify}
-                        aria-label="Spotify"
-                        role="img"
-                        className="text-sm text-[#1DB954]"
-                      />
-                    </p>
-                    <Link
-                      href="https://www.last.fm/user/johnenderson"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 border-b border-site-primary pb-0.5 text-sm font-bold text-site-primary no-underline transition-colors hover:border-site-primary-hover hover:text-site-primary-hover"
-                    >
-                      Ver no Last.fm
-                      <FontAwesomeIcon
-                        icon={faArrowRight}
-                        aria-hidden="true"
-                        className="text-xs"
-                      />
-                    </Link>
-                  </div>
-                </>
-              ) : (
-                <p className="m-0 text-site-body-muted">
-                  Sem artistas da semana para mostrar.
+                  </ul>
+                ) : (
+                  <p className="m-0 text-site-body-muted">
+                    Sem músicas recentes para mostrar.
+                  </p>
+                )}
+              </section>
+
+              <section aria-labelledby="top-artists-title">
+                <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                  <h2
+                    id="top-artists-title"
+                    className="m-0 text-xl font-bold text-site-foreground sm:text-2xl"
+                  >
+                    Artistas da semana
+                  </h2>
+                </div>
+                {artists.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-3 gap-3">
+                      {artists.slice(0, 9).map((artist) => (
+                        <ArtistCard key={artist.name} artist={artist} />
+                      ))}
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                      <p className="m-0 inline-flex items-center gap-1.5 rounded-full border border-site-border-subtle px-2.5 py-1 text-xs font-medium text-site-body-muted">
+                        <FontAwesomeIcon
+                          icon={faSpotify}
+                          aria-label="Spotify"
+                          role="img"
+                          className="text-sm text-[#1DB954]"
+                        />
+                        Imagens via Spotify
+                      </p>
+                      <Link
+                        href="https://www.last.fm/user/johnenderson"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 border-b border-site-primary pb-0.5 text-sm font-bold text-site-primary no-underline transition-colors hover:border-site-primary-hover hover:text-site-primary-hover"
+                      >
+                        Ver no Last.fm
+                        <FontAwesomeIcon
+                          icon={faArrowRight}
+                          aria-hidden="true"
+                          className="text-xs"
+                        />
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <p className="m-0 text-site-body-muted">
+                    Sem artistas da semana para mostrar.
+                  </p>
+                )}
+              </section>
+            </div>
+          </section>
+
+          <section
+            aria-labelledby="playing-title"
+            className="grid gap-8 border-b border-site-border-subtle py-16 lg:grid-cols-[1fr_auto]"
+          >
+            <header className="flex max-w-3xl items-start gap-3 lg:gap-6 xl:-ml-[4.5rem]">
+              <SectionIcon>
+                <FontAwesomeIcon icon={faGamepad} className="size-6" />
+              </SectionIcon>
+              <div>
+                <h2
+                  id="playing-title"
+                  className="m-0 text-3xl font-bold leading-none text-site-foreground sm:text-4xl"
+                >
+                  Jogando
+                </h2>
+                <p className="mb-0 mt-3 max-w-2xl text-base font-semibold leading-relaxed text-site-body-muted">
+                  {PLAYING_DESCRIPTION}
                 </p>
-              )}
-            </section>
-          </div>
+              </div>
+            </header>
+            <div className="flex items-end lg:justify-end">
+              <Link
+                href={STEAM_PROFILE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 border-b border-site-primary pb-0.5 text-sm font-bold text-site-primary no-underline transition-colors hover:border-site-primary-hover hover:text-site-primary-hover"
+              >
+                Me adiciona na Steam
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  aria-hidden="true"
+                  className="text-xs"
+                />
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
     </PageWrapper>
