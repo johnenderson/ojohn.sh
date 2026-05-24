@@ -1,8 +1,7 @@
+import { getSpotifyArtistImage, getSpotifyTrackImage } from '@/lib/spotify';
 import { LastfmArtist, LastfmStats, LastfmTrack } from '@/types/Lastfm';
 
 const LASTFM_API_URL = 'https://ws.audioscrobbler.com/2.0/';
-const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
-const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token';
 const DEFAULT_LASTFM_USERNAME = 'johnenderson';
 
 type LastfmApiImage = {
@@ -14,6 +13,7 @@ type LastfmApiTrack = {
   name?: string;
   artist?: {
     '#text'?: string;
+    name?: string;
   };
   album?: {
     '#text'?: string;
@@ -27,6 +27,7 @@ type LastfmApiTrack = {
   '@attr'?: {
     nowplaying?: string;
   };
+  playcount?: string;
 };
 
 type LastfmApiArtist = {
@@ -40,33 +41,11 @@ type LastfmApiResponse = {
   recenttracks?: {
     track?: LastfmApiTrack | LastfmApiTrack[];
   };
+  toptracks?: {
+    track?: LastfmApiTrack | LastfmApiTrack[];
+  };
   topartists?: {
     artist?: LastfmApiArtist | LastfmApiArtist[];
-  };
-};
-
-type SpotifyAccessTokenResponse = {
-  access_token?: string;
-};
-
-type SpotifyArtistImage = {
-  url?: string;
-  width?: number;
-  height?: number;
-};
-
-type SpotifyArtist = {
-  external_urls?: {
-    spotify?: string;
-  };
-  id?: string;
-  name?: string;
-  images?: SpotifyArtistImage[];
-};
-
-type SpotifyArtistSearchResponse = {
-  artists?: {
-    items?: SpotifyArtist[];
   };
 };
 
@@ -77,7 +56,7 @@ type LastfmFetchOptions = {
   };
 };
 
-type LastfmTopArtistsPeriod =
+type LastfmTopPeriod =
   | '7day'
   | '1month'
   | '3month'
@@ -111,16 +90,22 @@ const getImageUrl = (images: LastfmApiImage[] | undefined) => {
   return url;
 };
 
+const getTrackArtistName = (track: LastfmApiTrack) =>
+  track.artist?.['#text'] ?? track.artist?.name ?? 'Artista desconhecido';
+
 const mapTrack = (track: LastfmApiTrack): LastfmTrack => ({
   name: track.name ?? 'Faixa desconhecida',
-  artist: track.artist?.['#text'] ?? 'Artista desconhecido',
+  artist: getTrackArtistName(track),
   album: track.album?.['#text'] || null,
   url: track.url ?? 'https://www.last.fm/user/johnenderson',
   imageUrl: getImageUrl(track.image),
+  imageSource: null,
+  spotifyUrl: null,
   nowPlaying: track['@attr']?.nowplaying === 'true',
   playedAt: track.date?.uts
     ? new Date(Number(track.date.uts) * 1000).toISOString()
     : null,
+  playcount: track.playcount ? Number(track.playcount) : undefined,
 });
 
 const mapArtist = (artist: LastfmApiArtist): LastfmArtist => {
@@ -132,101 +117,6 @@ const mapArtist = (artist: LastfmApiArtist): LastfmArtist => {
     spotifyUrl: null,
     playcount: artist.playcount ? Number(artist.playcount) : 0,
   };
-};
-
-let spotifyTokenCache: { token: string; expiresAt: number } | null = null;
-
-const getSpotifyAccessToken = async () => {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-
-  if (!clientId || !clientSecret) return null;
-
-  if (spotifyTokenCache && spotifyTokenCache.expiresAt > Date.now()) {
-    return spotifyTokenCache.token;
-  }
-
-  try {
-    const response = await fetch(SPOTIFY_TOKEN_URL, {
-      method: 'POST',
-      cache: 'no-store',
-      headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${clientId}:${clientSecret}`,
-        ).toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        grant_type: 'client_credentials',
-      }),
-    });
-
-    if (!response.ok) return null;
-
-    const data = (await response.json()) as SpotifyAccessTokenResponse;
-    const token = data.access_token ?? null;
-
-    if (token) {
-      // Tokens client_credentials duram 1h; cacheamos por 50min em memória.
-      spotifyTokenCache = { token, expiresAt: Date.now() + 50 * 60 * 1000 };
-    }
-
-    return token;
-  } catch {
-    return null;
-  }
-};
-
-const getSpotifyArtistImage = async (
-  artistName: string,
-  accessToken: string | null,
-) => {
-  if (!accessToken) return null;
-
-  const params = new URLSearchParams({
-    q: artistName,
-    type: 'artist',
-    limit: '5',
-  });
-
-  try {
-    const response = await fetch(
-      `${SPOTIFY_API_URL}/search?${params.toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        next: { revalidate: 60 * 60 * 24 },
-      },
-    );
-
-    if (!response.ok) return null;
-
-    const data = (await response.json()) as SpotifyArtistSearchResponse;
-    const artists = data.artists?.items ?? [];
-    const exactMatch = artists.find(
-      (artist) => artist.name?.toLowerCase() === artistName.toLowerCase(),
-    );
-    const artist = exactMatch ?? artists[0];
-
-    if (!artist) return null;
-
-    // A resposta da busca já inclui as imagens e a URL do artista, então não
-    // precisamos de uma segunda chamada a /artists/{id}.
-    const images = artist.images ?? [];
-    const image = [...images].sort(
-      (a, b) => (b.width ?? 0) - (a.width ?? 0),
-    )[0];
-
-    if (!image?.url) return null;
-
-    return {
-      imageUrl: image.url,
-      spotifyUrl: artist.external_urls?.spotify ?? null,
-    };
-  } catch {
-    return null;
-  }
 };
 
 const getEmptyStats = (): LastfmStats => ({
@@ -304,10 +194,62 @@ export async function getLastfmStats(): Promise<LastfmStats> {
   return createLastfmStats(tracks);
 }
 
+export async function getLastfmTopTracks({
+  period = '7day',
+}: {
+  period?: LastfmTopPeriod;
+} = {}): Promise<LastfmTrack[]> {
+  const apiKey = process.env.LASTFM_API_KEY;
+  const username = process.env.LASTFM_USERNAME ?? DEFAULT_LASTFM_USERNAME;
+
+  if (!apiKey) return [];
+
+  const params = new URLSearchParams({
+    method: 'user.gettoptracks',
+    user: username,
+    api_key: apiKey,
+    format: 'json',
+    period,
+    limit: '1',
+  });
+
+  const response = await fetch(`${LASTFM_API_URL}?${params.toString()}`, {
+    next: { revalidate: 3600 },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch Last.fm top tracks');
+  }
+
+  const data = (await response.json()) as LastfmApiResponse;
+  const rawTracks = data.toptracks?.track;
+  const tracks = (
+    Array.isArray(rawTracks) ? rawTracks : rawTracks ? [rawTracks] : []
+  ).map((track) => ({
+    ...mapTrack(track),
+    imageUrl: null,
+  }));
+
+  return Promise.all(
+    tracks.map(async (track) => {
+      const spotifyTrack = await getSpotifyTrackImage(track.name, track.artist);
+
+      if (!spotifyTrack) return track;
+
+      return {
+        ...track,
+        imageUrl: spotifyTrack.imageUrl,
+        imageSource: 'spotify' as const,
+        spotifyUrl: spotifyTrack.spotifyUrl,
+      };
+    }),
+  );
+}
+
 export async function getLastfmTopArtists({
   period = '7day',
 }: {
-  period?: LastfmTopArtistsPeriod;
+  period?: LastfmTopPeriod;
 } = {}): Promise<LastfmArtist[]> {
   const apiKey = process.env.LASTFM_API_KEY;
   const username = process.env.LASTFM_USERNAME ?? DEFAULT_LASTFM_USERNAME;
@@ -337,14 +279,10 @@ export async function getLastfmTopArtists({
   const artists = (
     Array.isArray(rawArtists) ? rawArtists : rawArtists ? [rawArtists] : []
   ).map(mapArtist);
-  const spotifyAccessToken = await getSpotifyAccessToken();
 
   return Promise.all(
     artists.map(async (artist) => {
-      const spotifyArtist = await getSpotifyArtistImage(
-        artist.name,
-        spotifyAccessToken,
-      );
+      const spotifyArtist = await getSpotifyArtistImage(artist.name);
 
       if (spotifyArtist) {
         const spotifyArtistWithImage: LastfmArtist = {

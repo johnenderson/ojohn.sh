@@ -4,8 +4,11 @@ export type LastfmTrack = {
   album: string | null;
   url: string;
   imageUrl: string | null;
+  imageSource: 'spotify' | null;
+  spotifyUrl: string | null;
   nowPlaying: boolean;
   playedAt: string | null;
+  playcount?: number;
 };
 
 export type LastfmStats = {

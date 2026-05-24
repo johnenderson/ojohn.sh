@@ -108,6 +108,7 @@ const TrackArtwork = ({
       height={size}
       loading={eager ? 'eager' : 'lazy'}
       priority={eager}
+      unoptimized
       className="shrink-0 rounded transition-transform duration-200 group-hover:scale-[1.03] group-focus-within:scale-[1.03]"
       style={{ width: size, height: size }}
       onError={() => setFailed(true)}
