@@ -94,7 +94,7 @@ type GithubEvent = {
     commits?: { sha?: string; message?: string }[];
     action?: string;
     ref_type?: string;
-    pull_request?: { html_url?: string };
+    pull_request?: { html_url?: string; merged?: boolean };
     release?: { html_url?: string; tag_name?: string };
     issue?: { html_url?: string };
   };
@@ -306,17 +306,24 @@ const mapEvent = (event: GithubEvent): GithubFeedItem | null => {
         at,
       };
     }
-    case 'PullRequestEvent':
+    case 'PullRequestEvent': {
+      const action = event.payload?.action;
+      const merged = event.payload?.pull_request?.merged;
+      const label =
+        action === 'merged' || (action === 'closed' && merged)
+          ? 'Pull request mesclado'
+          : action === 'closed'
+          ? 'Pull request fechado'
+          : 'Pull request aberto';
+
       return {
         type: 'pr',
-        label:
-          event.payload?.action === 'closed'
-            ? 'Pull request fechado'
-            : 'Pull request aberto',
+        label,
         repo,
         url: event.payload?.pull_request?.html_url ?? repoUrl,
         at,
       };
+    }
     case 'ReleaseEvent':
       return {
         type: 'release',
@@ -329,14 +336,22 @@ const mapEvent = (event: GithubEvent): GithubFeedItem | null => {
       };
     case 'WatchEvent':
       return { type: 'star', label: 'Favoritou', repo, url: repoUrl, at };
-    case 'CreateEvent':
+    case 'CreateEvent': {
+      const refTypeLabels: Record<string, string> = {
+        branch: 'branch',
+        tag: 'tag',
+        repository: 'repositório',
+      };
+      const refType = event.payload?.ref_type ?? 'repository';
+
       return {
         type: 'create',
-        label: `Criou ${event.payload?.ref_type ?? 'repositório'}`,
+        label: `Criou ${refTypeLabels[refType] ?? refType}`,
         repo,
         url: repoUrl,
         at,
       };
+    }
     case 'IssuesEvent':
       return {
         type: 'issue',
