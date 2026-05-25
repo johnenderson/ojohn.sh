@@ -5,6 +5,7 @@ import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import {
   faArrowRight,
   faBullseye,
+  faCode,
   faGamepad,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,12 +13,16 @@ import type { Metadata } from 'next';
 
 import { PageTitle } from '@/base/components/PageTitle';
 import {
+  ActivityFeed,
   ArtistCard,
+  CodingRhythm,
   FeaturedTrack,
+  LanguageStack,
   RadarCard,
   RecentTrack,
   SectionIcon,
 } from '@/features/now/components';
+import { getGithubDev } from '@/lib/github';
 import {
   getLastfmRecentStats,
   getLastfmTopArtists,
@@ -31,6 +36,8 @@ const NOW_DESCRIPTION =
   'Um recorte do que anda ocupando minha cabeça fora dos commits.';
 const RADAR_DESCRIPTION =
   'Cursos e assuntos que estão ocupando meus estudos no momento.';
+const CODE_DESCRIPTION =
+  'Meus padrões de commit, a stack que mais uso e o que andei publicando no GitHub.';
 const LISTENING_DESCRIPTION =
   'Sou um músico enferrujado, que continua amando música. Aqui ficam alguns rastros do que grudou no ouvido.';
 const PLAYING_DESCRIPTION =
@@ -99,7 +106,7 @@ const getUniqueTracks = (tracks: LastfmTrack[]) => {
 };
 
 export default async function NowPage() {
-  const [lastfm, artists, topTracks] = await Promise.all([
+  const [lastfm, artists, topTracks, dev] = await Promise.all([
     getLastfmRecentStats().catch(() => ({
       nowPlaying: null,
       lastPlayed: null,
@@ -107,7 +114,12 @@ export default async function NowPage() {
     })),
     getLastfmTopArtists({ period: '7day' }).catch(() => []),
     getLastfmTopTracks({ period: '7day' }).catch(() => []),
+    getGithubDev().catch(() => null),
   ]);
+
+  const hasDevData = Boolean(
+    dev && (dev.rhythm || dev.languages.length > 0 || dev.activity.length > 0),
+  );
 
   const recentTracks = getUniqueTracks(
     [lastfm.lastPlayed, ...lastfm.tracks].filter(Boolean) as LastfmTrack[],
@@ -171,6 +183,38 @@ export default async function NowPage() {
               </RadarCard>
             </div>
           </section>
+
+          {hasDevData ? (
+            <section
+              aria-labelledby="code-title"
+              className="border-b border-site-border-subtle py-16"
+            >
+              <header className="mb-10 flex max-w-3xl items-start gap-3 lg:gap-6 xl:-ml-[4.5rem]">
+                <SectionIcon>
+                  <FontAwesomeIcon icon={faCode} className="size-6" />
+                </SectionIcon>
+                <div>
+                  <h2
+                    id="code-title"
+                    className="m-0 text-3xl font-bold leading-none text-site-foreground sm:text-4xl"
+                  >
+                    Código
+                  </h2>
+                  <p className="mb-0 mt-3 text-base font-semibold leading-snug text-site-body-muted">
+                    {CODE_DESCRIPTION}
+                  </p>
+                </div>
+              </header>
+
+              <div className="flex flex-col gap-4">
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {dev?.rhythm ? <CodingRhythm rhythm={dev.rhythm} /> : null}
+                  <LanguageStack languages={dev?.languages ?? []} />
+                </div>
+                <ActivityFeed items={dev?.activity ?? []} />
+              </div>
+            </section>
+          ) : null}
 
           <section
             aria-labelledby="listening-title"

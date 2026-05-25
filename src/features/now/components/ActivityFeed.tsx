@@ -1,0 +1,85 @@
+import Link from 'next/link';
+
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import {
+  faCircleDot,
+  faCodeBranch,
+  faCodeCommit,
+  faStar,
+  faTag,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import type { GithubFeedItem } from '@/lib/github';
+
+const ICONS: Record<GithubFeedItem['type'], IconDefinition> = {
+  push: faCodeCommit,
+  pr: faCodeBranch,
+  release: faTag,
+  star: faStar,
+  create: faCodeBranch,
+  issue: faCircleDot,
+  other: faCodeCommit,
+};
+
+const formatRelativeTime = (iso: string) => {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const minutes = Math.round(diffMs / 60000);
+
+  if (minutes < 1) return 'agora';
+  if (minutes < 60) return `há ${minutes} min`;
+
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `há ${hours}h`;
+
+  const days = Math.round(hours / 24);
+  return `há ${days}d`;
+};
+
+type ActivityFeedProps = {
+  items: GithubFeedItem[];
+};
+
+export const ActivityFeed = ({ items }: ActivityFeedProps) => {
+  if (items.length === 0) return null;
+
+  return (
+    <div className="rounded-md border border-site-border-muted bg-site-card p-4 sm:p-5">
+      <h3 className="m-0 text-base font-semibold text-site-foreground">
+        Em produção
+      </h3>
+      <p className="mb-2 mt-1 text-xs text-site-body-muted">
+        Atividade pública recente no GitHub
+      </p>
+
+      <ul className="m-0 flex list-none flex-col gap-1 p-0">
+        {items.map((item, index) => (
+          <li key={`${item.type}-${item.repo}-${item.at}-${index}`}>
+            <Link
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="interactive-row group flex items-center gap-3 rounded-md p-2 no-underline"
+            >
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-site-border-muted bg-site-card-hover text-site-primary">
+                <FontAwesomeIcon
+                  icon={ICONS[item.type]}
+                  aria-hidden="true"
+                  className="text-sm"
+                />
+              </span>
+              <div className="min-w-0">
+                <p className="m-0 truncate text-sm font-bold leading-snug text-site-foreground transition-colors group-hover:text-site-primary-hover">
+                  {item.label}
+                </p>
+                <p className="m-0 truncate text-xs text-site-body-muted">
+                  {item.repo} · {formatRelativeTime(item.at)}
+                </p>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
