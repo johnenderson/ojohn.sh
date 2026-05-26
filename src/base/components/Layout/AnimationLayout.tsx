@@ -2,7 +2,7 @@
 
 import { FC, PropsWithChildren } from 'react';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 export const AnimationLayout: FC<PropsWithChildren> = ({ children }) => (
   <motion.div

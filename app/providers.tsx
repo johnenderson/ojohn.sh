@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 
-import { MotionConfig } from 'framer-motion';
+import { MotionConfig } from 'motion/react';
 
 import { Layout } from '@/base/components/Layout';
 import { ThemeProvider } from '@/base/components/Theme';

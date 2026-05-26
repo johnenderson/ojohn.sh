@@ -26,8 +26,8 @@
     "@fortawesome/react-fontawesome": "^3.3.1",
     "debounce": "^2.1.0",
     "feed": "^5.2.1",
-    "framer-motion": "^10.12.16",
     "lightningcss-linux-x64-gnu": "^1.32.0",
+    "motion": "^12.40.0",
     "next": "^16.2.6",
     "react": "^19",
     "react-dom": "^19",
@@ -55,6 +55,7 @@
     "prettier": "^2.4.1",
     "react-tweet-embed": "^2.0.0",
     "remark-gfm": "^4.0.1",
+    "shadcn": "^4.8.0",
     "tailwindcss": "^4.3.0",
     "typescript": "^5.8.3"
   },
