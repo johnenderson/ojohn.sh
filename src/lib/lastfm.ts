@@ -1,5 +1,10 @@
 import { getSpotifyArtistImage, getSpotifyTrackImage } from '@/lib/spotify';
-import { LastfmArtist, LastfmStats, LastfmTrack } from '@/types/Lastfm';
+import {
+  LastfmArtist,
+  LastfmStats,
+  LastfmTag,
+  LastfmTrack,
+} from '@/types/Lastfm';
 
 const LASTFM_API_URL = 'https://ws.audioscrobbler.com/2.0/';
 const DEFAULT_LASTFM_USERNAME = 'johnenderson';
@@ -298,4 +303,113 @@ export async function getLastfmTopArtists({
       return artist;
     }),
   );
+}
+
+type LastfmApiTag = {
+  name?: string;
+  count?: number;
+};
+
+type LastfmArtistTagsResponse = {
+  toptags?: {
+    tag?: LastfmApiTag | LastfmApiTag[];
+  };
+};
+
+// Tags do Last.fm que não são gênero/estilo — ruído que não queremos exibir.
+const TAG_DENYLIST = new Set([
+  'seen live',
+  'favorites',
+  'favourite',
+  'favourites',
+  'favorite',
+  'favorite songs',
+  'favourite songs',
+  'spotify',
+  'all',
+  'love',
+  'beautiful',
+  'awesome',
+  'my music',
+]);
+
+const fetchArtistTags = async (
+  artist: string,
+  apiKey: string,
+): Promise<LastfmApiTag[]> => {
+  const params = new URLSearchParams({
+    method: 'artist.gettoptags',
+    artist,
+    api_key: apiKey,
+    format: 'json',
+    autocorrect: '1',
+  });
+
+  const response = await fetch(`${LASTFM_API_URL}?${params.toString()}`, {
+    next: { revalidate: 60 * 60 * 24 },
+  });
+
+  if (!response.ok) return [];
+
+  const data = (await response.json()) as LastfmArtistTagsResponse;
+  const raw = data.toptags?.tag;
+
+  return Array.isArray(raw) ? raw : raw ? [raw] : [];
+};
+
+export async function getLastfmTopTags({
+  period = '1month',
+  limit = 12,
+}: {
+  period?: LastfmTopPeriod;
+  limit?: number;
+} = {}): Promise<LastfmTag[]> {
+  const apiKey = process.env.LASTFM_API_KEY;
+  const username = process.env.LASTFM_USERNAME ?? DEFAULT_LASTFM_USERNAME;
+
+  if (!apiKey) return [];
+
+  const params = new URLSearchParams({
+    method: 'user.gettopartists',
+    user: username,
+    api_key: apiKey,
+    format: 'json',
+    period,
+    limit: '12',
+  });
+
+  const response = await fetch(`${LASTFM_API_URL}?${params.toString()}`, {
+    next: { revalidate: 3600 },
+  });
+
+  if (!response.ok) return [];
+
+  const data = (await response.json()) as LastfmApiResponse;
+  const rawArtists = data.topartists?.artist;
+  const names = (
+    Array.isArray(rawArtists) ? rawArtists : rawArtists ? [rawArtists] : []
+  )
+    .map((artist) => artist.name)
+    .filter((name): name is string => Boolean(name));
+
+  const tagLists = await Promise.all(
+    names.map((name) => fetchArtistTags(name, apiKey).catch(() => [])),
+  );
+
+  const weights = new Map<string, number>();
+
+  for (const tags of tagLists) {
+    // As 5 tags mais fortes de cada artista já bastam para o panorama.
+    for (const tag of tags.slice(0, 5)) {
+      const name = tag.name?.trim();
+      if (!name || TAG_DENYLIST.has(name.toLowerCase())) continue;
+
+      weights.set(name, (weights.get(name) ?? 0) + (tag.count ?? 0));
+    }
+  }
+
+  return [...weights.entries()]
+    .map(([name, weight]) => ({ name, weight }))
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, limit);
 }

@@ -524,6 +524,15 @@ const loadGithubDev = async (): Promise<GithubDev | null> => {
   return { rhythm, languages, activity };
 };
 
+const loadGithubLanguages = async (): Promise<GithubLanguage[]> => {
+  const token = process.env.GITHUB_TOKEN;
+  const username = process.env.GITHUB_USERNAME ?? DEFAULT_GITHUB_USERNAME;
+
+  if (!token) return [];
+
+  return fetchLanguages(username, token).catch(() => []);
+};
+
 export const getGithubPulse = unstable_cache(
   loadGithubPulse,
   ['github-pulse', 'v2'],
@@ -533,6 +542,14 @@ export const getGithubPulse = unstable_cache(
 export const getGithubDev = unstable_cache(
   loadGithubDev,
   ['github-dev', 'v1'],
+  {
+    revalidate: REVALIDATE_SECONDS,
+  },
+);
+
+export const getGithubLanguages = unstable_cache(
+  loadGithubLanguages,
+  ['github-languages', 'v1'],
   {
     revalidate: REVALIDATE_SECONDS,
   },

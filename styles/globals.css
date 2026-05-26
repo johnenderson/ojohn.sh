@@ -296,6 +296,78 @@ html.light {
   color: color-mix(in srgb, var(--tldr-accent) 76%, var(--site-foreground));
 }
 
+.about-tag {
+  --about-tag-accent: var(--site-primary);
+  background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--site-foreground) 5%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--about-tag-accent) 9%, var(--site-card));
+  border-color: color-mix(
+    in srgb,
+    var(--about-tag-accent) 30%,
+    var(--site-border-subtle)
+  );
+  box-shadow: inset 0 1px 0
+    color-mix(in srgb, var(--site-foreground) 7%, transparent);
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease, transform 280ms var(--ease-elastic);
+  will-change: transform;
+}
+
+.about-tag:hover {
+  background: color-mix(
+    in srgb,
+    var(--about-tag-accent) 14%,
+    var(--site-card-hover)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--about-tag-accent) 54%,
+    var(--site-border)
+  );
+  color: var(--site-foreground);
+  transform: translateY(-2px);
+}
+
+.about-tag[data-variant='neutral'] {
+  background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--site-foreground) 4%, transparent),
+      transparent
+    ),
+    var(--site-card);
+  border-color: var(--site-border-subtle);
+}
+
+.about-tag[data-variant='neutral']:hover {
+  background: color-mix(
+    in srgb,
+    var(--about-tag-accent) 8%,
+    var(--site-card-hover)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--about-tag-accent) 38%,
+    var(--site-border)
+  );
+}
+
+.about-tag-dot {
+  background: var(--about-tag-accent);
+  box-shadow: 0 0 16px
+    color-mix(in srgb, var(--about-tag-accent) 58%, transparent);
+}
+
+.about-tag-meta {
+  color: color-mix(
+    in srgb,
+    var(--about-tag-accent) 78%,
+    var(--site-foreground)
+  );
+}
+
 .interactive-row {
   transition: background-color 180ms ease, color 180ms ease,
     transform 320ms var(--ease-elastic);

@@ -25,3 +25,8 @@ export type LastfmArtist = {
   spotifyUrl: string | null;
   playcount: number;
 };
+
+export type LastfmTag = {
+  name: string;
+  weight: number;
+};

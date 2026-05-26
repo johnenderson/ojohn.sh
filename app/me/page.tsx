@@ -11,7 +11,11 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Metadata } from 'next';
 
+import { Card } from '@/base/components/Card';
 import { PageTitle } from '@/base/components/PageTitle';
+import { TagList } from '@/features/about/components';
+import { getGithubLanguages } from '@/lib/github';
+import { getLastfmTopTags } from '@/lib/lastfm';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 const ABOUT_TITLE = 'Sobre mim';
@@ -73,7 +77,14 @@ const tldrCards = [
   },
 ];
 
-export default function Page() {
+const musicTagColors = ['#ec4899', '#f0a66d', '#5bd3c7', '#8b5cf6', '#facc15'];
+
+export default async function Page() {
+  const [languages, musicTags] = await Promise.all([
+    getGithubLanguages().catch(() => []),
+    getLastfmTopTags({ period: '12month' }).catch(() => []),
+  ]);
+
   return (
     <PageWrapper>
       <main id="main">
@@ -99,9 +110,11 @@ export default function Page() {
 
               <ul className="m-0 grid w-full list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-4">
                 {tldrCards.map((card) => (
-                  <li
+                  <Card
+                    as="li"
                     key={card.pretitle}
-                    className="tldr-card interactive-card flex min-h-28 gap-4 rounded-md border p-4"
+                    interactive
+                    className="tldr-card flex min-h-28 gap-4 border p-4"
                     style={{ '--tldr-accent': card.accent } as CSSProperties}
                   >
                     <span className="tldr-card-icon flex size-11 shrink-0 items-center justify-center rounded-md">
@@ -129,7 +142,7 @@ export default function Page() {
                         {card.description}
                       </p>
                     </div>
-                  </li>
+                  </Card>
                 ))}
               </ul>
             </section>
@@ -214,6 +227,63 @@ export default function Page() {
                 </p>
               </div>
             </section>
+
+            {languages.length > 0 ? (
+              <>
+                <div className="h-px w-full bg-site-border-muted" />
+
+                <section
+                  aria-labelledby="stacks-title"
+                  className="flex w-full max-w-3xl flex-col gap-4"
+                >
+                  <h2
+                    id="stacks-title"
+                    className="m-0 text-2xl font-bold text-site-foreground"
+                  >
+                    Stacks que eu codo
+                  </h2>
+                  <p className="m-0 text-sm text-site-body-muted">
+                    As linguagens que mais aparecem nos meus repositórios
+                    públicos.
+                  </p>
+                  <TagList
+                    items={languages.map((language) => ({
+                      label: language.name,
+                      color: language.color,
+                      meta: `${language.percentage}%`,
+                    }))}
+                  />
+                </section>
+              </>
+            ) : null}
+
+            {musicTags.length > 0 ? (
+              <>
+                <div className="h-px w-full bg-site-border-muted" />
+
+                <section
+                  aria-labelledby="listening-title"
+                  className="flex w-full max-w-3xl flex-col gap-4"
+                >
+                  <h2
+                    id="listening-title"
+                    className="m-0 text-2xl font-bold text-site-foreground"
+                  >
+                    O que ando curtindo
+                  </h2>
+                  <p className="m-0 text-sm text-site-body-muted">
+                    Os gêneros e tags que dominam o que tenho ouvido no Last.fm.
+                  </p>
+                  <TagList
+                    variant="neutral"
+                    items={musicTags.map((tag, index) => ({
+                      label: tag.name,
+                      color: musicTagColors[index % musicTagColors.length],
+                    }))}
+                  />
+                </section>
+              </>
+            ) : null}
 
             <div className="h-px w-full bg-site-border-muted" />
 
