@@ -23,6 +23,8 @@ const ABOUT_DESCRIPTION = 'Sobre John Enderson';
 const ABOUT_URL = `${SITE_URL}/me`;
 const ABOUT_OG_IMAGE = `${SITE_URL}/og/site/me`;
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: ABOUT_TITLE,
   description: ABOUT_DESCRIPTION,
