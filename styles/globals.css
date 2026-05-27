@@ -12,6 +12,7 @@
   --site-card-hover: rgba(39, 35, 48, 0.96);
   --site-popover: rgba(12, 10, 17, 0.96);
   --site-navbar: rgba(9, 8, 13, 0.84);
+  --site-navbar-desktop: rgba(9, 8, 13, 0.45);
   --site-navbar-scrolled: rgba(9, 8, 13, 0.94);
   --site-primary: #5bd3c7;
   --site-primary-hover: #f0a66d;
@@ -39,6 +40,7 @@ html.light {
   --site-card-hover: #fffaf5;
   --site-popover: rgba(255, 253, 250, 0.96);
   --site-navbar: rgba(255, 253, 250, 0.78);
+  --site-navbar-desktop: rgba(255, 253, 250, 0.45);
   --site-navbar-scrolled: rgba(255, 253, 250, 0.95);
   --site-primary: #0d9488;
   --site-primary-hover: #0f766e;
@@ -494,10 +496,10 @@ html.light .navbar.scrolled {
 
 @media (min-width: 768px) {
   .navbar {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-bottom-color: transparent;
+    background: var(--site-navbar-desktop);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-bottom-color: var(--site-border-subtle);
   }
 
   .navbar.scrolled {
