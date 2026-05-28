@@ -17,7 +17,10 @@ import {
   ArtistCard,
   CodingRhythm,
   FeaturedTrack,
+  GameCard,
   LanguageStack,
+  LolChampionCard,
+  LolRankedCard,
   RadarCard,
   RecentTrack,
   SectionIcon,
@@ -28,7 +31,9 @@ import {
   getLastfmTopArtists,
   getLastfmTopTracks,
 } from '@/lib/lastfm';
+import { getLolProfile } from '@/lib/lol';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
+import { getSteamGames } from '@/lib/steam';
 import { LastfmTrack } from '@/types/Lastfm';
 
 const NOW_TITLE = 'Fazendo agora';
@@ -45,10 +50,12 @@ const PLAYING_DESCRIPTION =
 const MATHEUS_FIDELIS_BLOG_URL = 'https://fidelissauro.dev/';
 const STEAM_PROFILE_URL =
   'https://steamcommunity.com/profiles/76561198796212584/';
+const LOL_PROFILE_URL = 'https://www.op.gg/summoners/br/';
 const NOW_URL = `${SITE_URL}/now`;
 const NOW_OG_IMAGE = `${SITE_URL}/og/site/now`;
 
 export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: NOW_TITLE,
@@ -106,7 +113,7 @@ const getUniqueTracks = (tracks: LastfmTrack[]) => {
 };
 
 export default async function NowPage() {
-  const [lastfm, artists, topTracks, dev] = await Promise.all([
+  const [lastfm, artists, topTracks, dev, steam, lol] = await Promise.all([
     getLastfmRecentStats().catch(() => ({
       nowPlaying: null,
       lastPlayed: null,
@@ -115,6 +122,8 @@ export default async function NowPage() {
     getLastfmTopArtists({ period: '7day' }).catch(() => []),
     getLastfmTopTracks({ period: '7day' }).catch(() => []),
     getGithubDev().catch(() => null),
+    getSteamGames().catch(() => ({ games: [], source: 'recent' as const })),
+    getLolProfile().catch(() => null),
   ]);
 
   const hasDevData = Boolean(
@@ -298,8 +307,12 @@ export default async function NowPage() {
                 {artists.length > 0 ? (
                   <>
                     <div className="grid grid-cols-3 gap-3">
-                      {artists.slice(0, 9).map((artist) => (
-                        <ArtistCard key={artist.name} artist={artist} />
+                      {artists.slice(0, 9).map((artist, index) => (
+                        <ArtistCard
+                          key={artist.name}
+                          artist={artist}
+                          index={index}
+                        />
                       ))}
                     </div>
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
@@ -336,11 +349,8 @@ export default async function NowPage() {
             </div>
           </section>
 
-          <section
-            aria-labelledby="playing-title"
-            className="grid gap-8 border-b border-site-border-subtle py-16 lg:grid-cols-[1fr_auto]"
-          >
-            <header className="flex max-w-3xl items-start gap-3 lg:gap-6 xl:-ml-[4.5rem]">
+          <section aria-labelledby="playing-title" className="pt-16">
+            <header className="mb-10 flex max-w-3xl items-start gap-3 lg:gap-6 xl:-ml-[4.5rem]">
               <SectionIcon>
                 <FontAwesomeIcon icon={faGamepad} className="size-6" />
               </SectionIcon>
@@ -356,21 +366,125 @@ export default async function NowPage() {
                 </p>
               </div>
             </header>
-            <div className="flex items-end lg:justify-end">
-              <Link
-                href={STEAM_PROFILE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border-b border-site-primary pb-0.5 text-sm font-bold text-site-primary no-underline transition-colors hover:border-site-primary-hover hover:text-site-primary-hover"
+
+            {/* League of Legends — mencionado na descrição, vem primeiro */}
+            {lol && (
+              <div
+                aria-labelledby="lol-title"
+                className={steam.games.length > 0 ? 'mb-12' : ''}
               >
-                Steam fica aqui
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  aria-hidden="true"
-                  className="text-xs"
-                />
-              </Link>
-            </div>
+                <header className="mb-6 max-w-3xl">
+                  <h3
+                    id="lol-title"
+                    className="m-0 text-xl font-bold leading-tight text-site-foreground"
+                  >
+                    League of Legends
+                  </h3>
+                  <p className="mb-0 mt-2 text-base font-semibold leading-snug text-site-body-muted">
+                    Ranked Solo/Duo e os campeões com mais maestria.
+                  </p>
+                </header>
+
+                <div className="flex max-w-[52rem] flex-col gap-6">
+                  {lol.ranked && <LolRankedCard ranked={lol.ranked} />}
+
+                  {lol.topChampions.length > 0 && (
+                    <div>
+                      <h4 className="mb-4 text-base font-bold text-site-foreground">
+                        Top campeões
+                      </h4>
+                      <div className="grid grid-cols-5 gap-3 lg:gap-6">
+                        {lol.topChampions.map((champion, i) => (
+                          <LolChampionCard
+                            key={champion.id}
+                            champion={champion}
+                            index={i}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-end">
+                    <Link
+                      href={`${LOL_PROFILE_URL}${encodeURIComponent(
+                        lol.summonerName.replace('#', '-'),
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 border-b border-site-primary pb-0.5 text-sm font-bold text-site-primary no-underline transition-colors hover:border-site-primary-hover hover:text-site-primary-hover"
+                    >
+                      Ver no op.gg
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        aria-hidden="true"
+                        className="text-xs"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Steam — conteúdo complementar */}
+            {steam.games.length > 0 ? (
+              <div
+                className={
+                  lol ? 'border-t border-site-border-subtle pt-10' : ''
+                }
+              >
+                {lol && (
+                  <h3 className="mb-5 text-xl font-bold text-site-foreground">
+                    No Steam
+                  </h3>
+                )}
+                <div className="flex flex-col gap-5">
+                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:gap-6">
+                    {steam.games.map((game) => (
+                      <GameCard key={game.appid} game={game} />
+                    ))}
+                  </div>
+                  <div className="flex justify-end">
+                    <Link
+                      href={STEAM_PROFILE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 border-b border-site-primary pb-0.5 text-sm font-bold text-site-primary no-underline transition-colors hover:border-site-primary-hover hover:text-site-primary-hover"
+                    >
+                      Ver no Steam
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        aria-hidden="true"
+                        className="text-xs"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`flex items-center justify-between gap-4${
+                  lol ? ' border-t border-site-border-subtle pt-10' : ''
+                }`}
+              >
+                <p className="m-0 text-site-body-muted">
+                  Nenhum jogo para mostrar.
+                </p>
+                <Link
+                  href={STEAM_PROFILE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 border-b border-site-primary pb-0.5 text-sm font-bold text-site-primary no-underline transition-colors hover:border-site-primary-hover hover:text-site-primary-hover"
+                >
+                  Steam fica aqui
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    aria-hidden="true"
+                    className="text-xs"
+                  />
+                </Link>
+              </div>
+            )}
           </section>
         </div>
       </main>

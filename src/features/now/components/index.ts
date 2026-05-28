@@ -1,8 +1,12 @@
 export { ActivityFeed } from './ActivityFeed';
 export { ArtistCard } from './ArtistCard';
+export { CardTooltip } from './CardTooltip';
 export { CodingRhythm } from './CodingRhythm';
 export { FeaturedTrack } from './FeaturedTrack';
+export { GameCard } from './GameCard';
 export { LanguageStack } from './LanguageStack';
+export { LolChampionCard } from './LolChampionCard';
+export { LolRankedCard } from './LolRankedCard';
 export { RadarCard } from './RadarCard';
 export { RecentTrack } from './RecentTrack';
 export { SectionIcon } from './SectionIcon';

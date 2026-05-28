@@ -1,0 +1,44 @@
+'use client';
+
+import { ReactNode } from 'react';
+
+import * as Tooltip from '@radix-ui/react-tooltip';
+
+/**
+ * Tooltip padrão dos cards de imagem da página /now.
+ *
+ * Usa @radix-ui/react-tooltip para replicar o comportamento do doce.sh:
+ *  - delayDuration={300}  → abre após 300ms de hover (evita flashes ao passar o mouse)
+ *  - skipDelayDuration={0} → se mover de um card para outro, abre imediatamente
+ *  - disableHoverableContent → fecha ao sair do trigger, sem "entrar" no tooltip
+ */
+export const CardTooltip = ({
+  children,
+  content,
+  delayDuration = 300,
+}: {
+  children: ReactNode;
+  content: ReactNode;
+  /** ms antes do tooltip aparecer. 300 para grids de navegação, 0 para coleções inspecionadas. */
+  delayDuration?: number;
+}) => (
+  <Tooltip.Provider
+    delayDuration={delayDuration}
+    skipDelayDuration={0}
+    disableHoverableContent
+  >
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Content
+          side="bottom"
+          align="center"
+          sideOffset={6}
+          className="z-20 w-max max-w-[18ch] rounded-md border border-site-border bg-site-popover px-3 py-2 text-center shadow-xl shadow-black/30 backdrop-blur-sm animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-1"
+        >
+          {content}
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  </Tooltip.Provider>
+);
